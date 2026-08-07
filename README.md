@@ -1,2 +1,2 @@
-# all_hadamard_matrices_in_dimension_six
+# All Hadamard matrices in dimension six
 A complete characterization of all Hadamard matrices in dimension six
