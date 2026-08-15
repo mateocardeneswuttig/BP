@@ -10,10 +10,6 @@ def HasHadamardTwoByTwo (H : Mat6) : Prop :=
   ∃ (rows cols : I2 ↪ I6),
     IsHadamard2 (H.submatrix rows cols)
 
-def HasVanishingThreeMinor (H : Mat6) : Prop :=
-  ∃ (rows cols : I3 ↪ I6),
-    Matrix.det (H.submatrix rows cols) = 0
-
 def IsDephased (H : Mat6) : Prop :=
   (∀ j, H (Sum.inl 0) j = 1) ∧
   (∀ i, H i (Sum.inl 0) = 1)

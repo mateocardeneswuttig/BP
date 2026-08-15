@@ -230,63 +230,6 @@ theorem equivalent_seamCornerChart {H : Mat6}
     exact hH _ _
   exact equivalent_trans hreindex (equivalent_dephase hunit)
 
-/-- Legacy sufficient interface from the earlier conditional assembly.  It
-asks for a separate displayed-corner witness after transposition and is
-therefore stronger than the paper needs: `FourierSeamCertificate.lean` proves
-the six-corner statement once and transports finite-corner existence through
-transpose structurally.  This definition and the conditional theorem below
-remain as a backwards-compatible interface; the main classification no
-longer assumes them. -/
-def FourierSeamFiniteCornerCertificate : Prop :=
-  ∀ omega z₁ z₂ : ℂ,
-    IsPrimitiveCubicPhase omega →
-    Complex.normSq z₁ = 1 →
-    Complex.normSq z₂ = 1 →
-    (∃ r : I3, ∃ c : I2,
-      leadingFiniteCornerWitnessProduct
-        (seamCornerChart r c (affineFourierMatrix omega z₁ z₂)) ≠ 0) ∧
-    (∃ r : I3, ∃ c : I2,
-      leadingFiniteCornerWitnessProduct
-        (seamCornerChart r c
-          (affineFourierMatrix omega z₁ z₂).transpose) ≠ 0)
-
-theorem affineFourierSeam_mem_finiteCornerAtlas
-    (hcertificate : FourierSeamFiniteCornerCertificate)
-    {H : Mat6} (hH : IsAffineFourierSeam H) :
-    InFiniteCornerAtlas H := by
-  rcases hH with ⟨omega, z₁, z₂, homega, hz₁, hz₂, hpres⟩
-  have hwitness := hcertificate omega z₁ z₂ homega hz₁ hz₂
-  have hfourier := affineFourierMatrix_isHadamard homega hz₁ hz₂
-  rcases hpres with hpres | hpres
-  · rcases hwitness.1 with ⟨r, c, hproduct⟩
-    have hleading : LeadingFiniteCornerCertificate
-        (seamCornerChart r c (affineFourierMatrix omega z₁ z₂)) :=
-      leadingFiniteCornerCertificate_iff_witnessProduct_ne_zero.2 hproduct
-    let K := seamCornerChart r c (affineFourierMatrix omega z₁ z₂)
-    have hfourierK : Equivalent (affineFourierMatrix omega z₁ z₂) K :=
-      equivalent_seamCornerChart hfourier.1 r c
-    have hK := (equivalent_isHadamard_iff hfourierK).1 hfourier
-    exact inFiniteCornerAtlas_of_equivalent
-      (equivalent_trans hpres hfourierK)
-      (finiteCorner_mem_finiteCornerAtlas
-        (leadingFiniteCornerCertificate_hasFiniteCorner hK hleading))
-  · rcases hwitness.2 with ⟨r, c, hproduct⟩
-    have hleading : LeadingFiniteCornerCertificate
-        (seamCornerChart r c
-          (affineFourierMatrix omega z₁ z₂).transpose) :=
-      leadingFiniteCornerCertificate_iff_witnessProduct_ne_zero.2 hproduct
-    let K := seamCornerChart r c
-      (affineFourierMatrix omega z₁ z₂).transpose
-    have htransposeK :
-        Equivalent (affineFourierMatrix omega z₁ z₂).transpose K :=
-      equivalent_seamCornerChart (transpose_isHadamard hfourier).1 r c
-    have hK := (equivalent_isHadamard_iff htransposeK).1
-      (transpose_isHadamard hfourier)
-    exact inFiniteCornerAtlas_of_equivalent
-      (equivalent_trans hpres htransposeK)
-      (finiteCorner_mem_finiteCornerAtlas
-        (leadingFiniteCornerCertificate_hasFiniteCorner hK hleading))
-
 end
 
 end Hadamard6

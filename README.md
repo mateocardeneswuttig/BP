@@ -167,12 +167,13 @@ root [`Hadamard6.lean`](Hadamard6.lean) imports
 `Hadamard6.PaperTheorem`, which in turn fixes the complete public dependency
 graph.
 
-Two unusually large files are exact arithmetic backends rather than extra
+Two generated files are exact arithmetic backends rather than extra
 classification layers: `KarlssonResidualCertificate.lean` is a generated
 Bernstein-positivity table and `KarlssonWitnessResultants.lean` contains
 generated resultant identities. Their short consumers are
-`KarlssonResidualGlobal.lean` and `KarlssonMixedBlocks.lean`. The remaining
-large seam file is a direct, theorem-structured six-corner calculation. This
+`KarlssonResidualGlobal.lean` and `KarlssonMixedBlocks.lean`. The other
+large file, `FourierSeamCertificate.lean`, is a direct, theorem-structured
+six-corner calculation rather than a generated table. This
 separation matters when reading the project: start from `PaperTheorem.lean`
 and descend into a certificate backend only when auditing that particular
 arithmetic identity.

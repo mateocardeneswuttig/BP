@@ -5,6 +5,7 @@ defaultTargets = ["Hadamard6"]
 
 [leanOptions]
 pp.unicode.fun = true # pretty-prints `fun a ↦ b`
+autoImplicit = false
 relaxedAutoImplicit = false
 weak.linter.mathlibStandardSet = true
 linter.style.header = false # no per-file copyright boilerplate in this research project
