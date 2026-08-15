@@ -58,8 +58,10 @@ theorem cubicPoly_eq_zero_iff (b₀ b₁ b₂ b₃ : ℂ) :
     have h₁ := congrArg (fun p : ℂ[X] ↦ p.coeff 1) h
     have h₂ := congrArg (fun p : ℂ[X] ↦ p.coeff 2) h
     have h₃ := congrArg (fun p : ℂ[X] ↦ p.coeff 3) h
-    simp [cubicPoly] at h₀ h₁ h₂ h₃
-    exact ⟨h₀, h₁, h₂, h₃⟩
+    exact ⟨by simpa [cubicPoly] using h₀,
+      by simpa [cubicPoly] using h₁,
+      by simpa [cubicPoly] using h₂,
+      by simpa [cubicPoly] using h₃⟩
   · rintro ⟨rfl, rfl, rfl, rfl⟩
     simp [cubicPoly]
 
@@ -166,7 +168,7 @@ theorem quadraticSharpEval_real_reciprocal
         star (quadraticEval q₀ q₁ q₂ ((r⁻¹ : ℝ) : ℂ)) := by
   simp only [quadraticSharpEval, quadraticEval, star_add, star_mul, star_pow]
   have histar : star ((r⁻¹ : ℝ) : ℂ) = ((r⁻¹ : ℝ) : ℂ) := by
-    simp [Complex.star_def]
+    simp
   have hri : (((r⁻¹ : ℝ) : ℂ)) = (r : ℂ)⁻¹ := by
     norm_cast
   have hrC : (r : ℂ) ≠ 0 := by exact_mod_cast hr
@@ -350,8 +352,9 @@ theorem quadratic_leading_ne_zero_of_identity
     q₂ ≠ 0 := by
   intro hq₂
   have he := congrArg (fun P : ℂ[X] ↦ P.eval 0) hpoly
-  simp [hq₂, quadraticPoly, quadraticSharpPoly, kappaPoly] at he
-  rcases he with he | he
+  have he' : δ = 0 ∨ s = 0 := by
+    simpa [hq₂, quadraticPoly, quadraticSharpPoly, kappaPoly] using he
+  rcases he' with he | he
   · exact hδ he
   · exact hs he
 
@@ -430,7 +433,7 @@ theorem quadratic_norm_identity_of_cubic_zero
       δ * star δ * kappa s x ^ 2 := by
   have he := h x
   rw [hb₃] at he
-  simp only [cubicEval, cubicSharpEval, mul_zero, add_zero,
+  simp only [cubicEval, cubicSharpEval,
     star_zero, zero_add] at he
   have hfactor :
       x * (quadraticEval b₀ b₁ b₂ x *

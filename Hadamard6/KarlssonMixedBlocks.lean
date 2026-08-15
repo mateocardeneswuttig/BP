@@ -262,8 +262,16 @@ theorem karlssonCoreA_det_factor (t : ℝ) (p : ℂ) (hp0 : p ≠ 0) :
   have hsqrt : ((Real.sqrt 3 : ℂ) ^ 2) = 3 := by
     exact_mod_cast (Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 3))
   rw [Matrix.det_fin_two]
-  simp [karlssonCoreA, karlssonF2, karlssonLambda,
-    Matrix.vecMul, dotProduct, Fin.sum_univ_two]
+  simp only [karlssonCoreA, karlssonF2, one_div, neg_smul, karlssonLambda,
+    Matrix.smul_of, Matrix.smul_cons, smul_eq_mul, Matrix.smul_empty,
+    mul_neg, Fin.isValue, Matrix.cons_mul, Nat.succ_eq_add_one,
+    Nat.reduceAdd, Matrix.empty_mul, Equiv.symm_apply_apply, Matrix.of_apply,
+    Matrix.cons_val', Matrix.vecMul, dotProduct, Matrix.add_apply,
+    Matrix.neg_apply, Matrix.smul_apply, Matrix.cons_val_zero,
+    Matrix.cons_val_fin_one, Fin.sum_univ_two, Matrix.one_apply_eq,
+    mul_one, one_mul, Matrix.cons_val_one, ne_eq, one_ne_zero,
+    not_false_eq_true, Matrix.one_apply_ne, mul_zero, neg_zero, zero_add,
+    neg_mul, zero_ne_one, neg_add_rev, neg_neg]
   unfold karlssonHalfAngleU karlssonHalfAngleV
   norm_num
   field_simp [hp0, htden]

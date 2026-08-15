@@ -68,7 +68,7 @@ theorem realKappa_reciprocal {s r : ℝ} (hr : r ≠ 0)
   have hid : realKappa s r⁻¹ = (r⁻¹) ^ 2 * realKappa s r := by
     unfold realKappa
     field_simp [hr]
-    <;> ring
+    all_goals ring
   rw [hid, hroot, mul_zero]
 
 theorem realKappa_root_sum_reciprocal {s r : ℝ}

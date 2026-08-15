@@ -53,9 +53,7 @@ theorem phaseTransform2_isHadamard2
           rw [show r i * (2 : ℂ) * star (r i) =
             (2 : ℂ) * (r i * star (r i)) by ring, hri]
           norm_num
-        · have hrij : (r i * (if i = j then (2 : ℂ) else 0)) *
-              star (r j) = 0 := by simp [hij]
-          simpa [hij] using hrij
+        · simp [hij]
 
 theorem hasHadamardTwoByTwo_of_equivalent
     {H K : Mat6} (hHK : Equivalent H K)

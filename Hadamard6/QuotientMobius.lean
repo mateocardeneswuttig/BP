@@ -25,9 +25,8 @@ theorem normSq_mobius_of_real {r : ℝ} {z : ℂ}
         Complex.normSq (z - (r : ℂ)) := by
     rw [Complex.normSq_sub, Complex.normSq_sub,
       Complex.normSq_mul, hz]
-    simp only [Complex.normSq_one, mul_one, Complex.normSq_apply,
-      Complex.ofReal_re, Complex.ofReal_im, Complex.one_re,
-      Complex.one_im, Complex.conj_ofReal, map_one]
+    simp only [mul_one, Complex.normSq_apply, Complex.ofReal_re,
+      Complex.ofReal_im, Complex.conj_ofReal, map_one]
     ring
   rw [mobius, Complex.normSq_div, hnumeq]
   exact div_self (fun h ↦ hden (Complex.normSq_eq_zero.mp h))

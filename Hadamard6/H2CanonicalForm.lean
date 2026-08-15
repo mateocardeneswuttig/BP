@@ -168,9 +168,11 @@ private theorem dephased_leading_hadamard2_neg_one
   simp only [Matrix.mul_apply, Matrix.conjTranspose_apply,
     Matrix.submatrix_apply, Matrix.smul_apply, Matrix.one_apply,
     Fin.sum_univ_two, h2LeadingPair_zero, h2LeadingPair_one] at hentry
-  simp [h00, h01, h10] at hentry
+  have hentry' :
+      1 + star (K (Sum.inl 1) (Sum.inl 1)) = 0 := by
+    simpa [h00, h01, h10] using hentry
   have hzstar : star (K (Sum.inl 1) (Sum.inl 1)) = -1 :=
-    eq_neg_of_add_eq_zero_right hentry
+    eq_neg_of_add_eq_zero_right hentry'
   calc
     K (Sum.inl 1) (Sum.inl 1) = star (star (K (Sum.inl 1) (Sum.inl 1))) :=
       (star_star _).symm
@@ -189,7 +191,7 @@ private theorem dephased_second_row_tail_sum
     Fin.sum_univ_three] at hentry
   have hstar := congrArg star hentry
   simp only [star_add, star_mul, star_star] at hstar
-  simp [hdeph.1, hdeph.2, hneg, h2Tail₀, h2Tail₁, h2Tail₂, h2Tail₃] at hstar
+  simp [hdeph.1, hdeph.2, hneg] at hstar
   simpa [h2Tail₀, h2Tail₁, h2Tail₂, h2Tail₃, add_assoc] using hstar
 
 private theorem dephased_second_column_tail_sum
@@ -203,7 +205,7 @@ private theorem dephased_second_column_tail_sum
   simp only [Matrix.mul_apply, Matrix.conjTranspose_apply,
     Matrix.smul_apply, Matrix.one_apply, Fintype.sum_sum_type,
     Fin.sum_univ_three] at hentry
-  simp [hdeph.1, hdeph.2, hneg, h2Tail₀, h2Tail₁, h2Tail₂, h2Tail₃] at hentry
+  simp [hdeph.1, hdeph.2, hneg] at hentry
   simpa [h2Tail₀, h2Tail₁, h2Tail₂, h2Tail₃, add_assoc] using hentry
 
 /-- **Intrinsic `H₂` normalization.**  Every order-six Hadamard matrix with

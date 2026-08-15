@@ -32,9 +32,10 @@ theorem quadratic_monomial_of_zero_endpoint
     (q₀ = 0 ∧ q₁ = 0) ∨
     (q₀ = 0 ∧ q₂ = 0) ∨
     (q₁ = 0 ∧ q₂ = 0) := by
-  have h₀ := congrArg (fun p : ℂ[X] ↦ p.coeff 0) hpoly
-  simp [quadraticPoly, quadraticSharpPoly, kappaPoly,
-    pow_two, Polynomial.coeff_mul] at h₀
+  have h₀ : q₀ = 0 ∨ q₂ = 0 := by
+    simpa [quadraticPoly, quadraticSharpPoly, kappaPoly,
+      pow_two, Polynomial.coeff_mul] using
+      congrArg (fun p : ℂ[X] ↦ p.coeff 0) hpoly
   have hrhs : C (δ * star δ) * kappaPoly 0 ^ 2 =
       (C (δ * star δ) * C 9) * X ^ 2 := by
     have hk : kappaPoly 0 = -(C 3 * X) := by
@@ -212,8 +213,14 @@ theorem normalizedRows_isHadamard3_of_row_equations
       simp [normalizedRows, hx₁, hx₂, hx₃, hy₁, hy₂, hy₃]
   · ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [normalizedRows, Matrix.mul_apply, Matrix.conjTranspose_apply,
-        Fin.sum_univ_three]
+      simp only [normalizedRows, Fin.zero_eta, Fin.mk_one, Fin.reduceFinMk,
+        Fin.isValue, Matrix.mul_apply, Matrix.of_apply, Matrix.cons_val',
+        Matrix.cons_val_fin_one, Matrix.cons_val_zero, Matrix.cons_val_one,
+        Matrix.cons_val, Matrix.conjTranspose_apply, RCLike.star_def,
+        Fin.sum_univ_three, Matrix.smul_apply, Matrix.one_apply_eq,
+        Matrix.one_apply_ne, smul_eq_mul, map_one, one_mul, mul_one,
+        mul_zero, Nat.reduceAdd, ne_eq, zero_ne_one, one_ne_zero,
+        Fin.reduceEq, not_false_eq_true]
     · norm_num
     · simpa [add_comm, add_left_comm, add_assoc] using hxstar
     · simpa [add_comm, add_left_comm, add_assoc] using hystar
@@ -486,15 +493,16 @@ theorem kappa_root_normSq_one_of_one_le_three
     {s : ℝ} {z : ℂ} (hs1 : 1 ≤ s) (hs3 : s ≤ 3)
     (hk : kappa (s : ℂ) z = 0) :
     Complex.normSq z = 1 := by
-  have hre := congrArg Complex.re hk
-  have him := congrArg Complex.im hk
-  have hnorms : Complex.normSq (s : ℂ) = s ^ 2 := by
-    simp [Complex.normSq_apply]
-    ring
-  have hstars : star (s : ℂ) = (s : ℂ) := by simp [Complex.star_def]
-  simp [kappa, hnorms, hstars, Complex.mul_re, Complex.mul_im,
-    Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
-    pow_two] at hre him
+  have hre :
+      2 * s * (z.re ^ 2 - z.im ^ 2) - (s ^ 2 + 3) * z.re + 2 * s = 0 := by
+    simpa [kappa, Complex.normSq_apply, Complex.mul_re, Complex.mul_im,
+      Complex.add_re, Complex.add_im, Complex.sub_re, Complex.sub_im,
+      pow_two, Complex.star_def] using congrArg Complex.re hk
+  have him : z.im * (4 * s * z.re - (s ^ 2 + 3)) = 0 := by
+    have himRaw := congrArg Complex.im hk
+    simp [kappa, Complex.normSq_apply, Complex.mul_re, Complex.mul_im,
+      Complex.add_re, Complex.add_im, Complex.sub_im, pow_two] at himRaw
+    nlinarith
   have hs0 : 0 < s := lt_of_lt_of_le zero_lt_one hs1
   by_cases hb : z.im = 0
   · have hdiscNonpos :
@@ -800,7 +808,7 @@ theorem closed_endpoint_avoiding_row_det_zero
           cubicEval b₀ b₁ b₂ b₃ x * y = 0) :
         δ * x + ell * y = 0 := by
       rw [hb₃] at hrel
-      simp only [cubicEval, mul_zero, add_zero] at hrel
+      simp only [cubicEval] at hrel
       rw [show b₀ + b₁ * x + b₂ * x ^ 2 =
           quadraticEval b₀ b₁ b₂ x by rfl, hQeval] at hrel
       have hfactor : kappa (s : ℂ) x * (δ * x + ell * y) = 0 := by
@@ -812,9 +820,8 @@ theorem closed_endpoint_avoiding_row_det_zero
     have hell : ell ≠ 0 := by
       intro hz
       apply hδ
-      have := hc₁
-      simp [hz] at this
-      rcases this with h | h
+      have hzero : δ * x₁ = 0 := by simpa [hz] using hc₁
+      rcases mul_eq_zero.mp hzero with h | h
       · exact h
       · exact False.elim (hx₁0 h)
     have he₁ : y₁ = (-δ / ell) * x₁ := by

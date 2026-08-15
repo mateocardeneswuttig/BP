@@ -123,8 +123,7 @@ private theorem star_seamCayley (x : ℝ) :
     star (seamCayley x) =
       ((1 : ℂ) - Complex.I * (x : ℂ)) /
         ((1 : ℂ) + Complex.I * (x : ℂ)) := by
-  simp [seamCayley, star_div, star_add, star_sub, star_mul,
-    Complex.star_def]
+  simp [seamCayley, star_add, star_sub, star_mul]
   ring
 
 private noncomputable def seamCayleyCoord (x : ℝ) : ℂ :=
@@ -187,9 +186,9 @@ def firstSeamChart (omega z₁ z₂ : ℂ) : Mat6 :=
        -1, -(omega ^ 2 * z₁), -(omega * z₂)]
 
 theorem seamCornerChart_zero_zero_eq
-    {omega z₁ z₂ : ℂ} (homega : IsPrimitiveCubicPhase omega)
-    (hz₁ : Complex.normSq z₁ = 1)
-    (hz₂ : Complex.normSq z₂ = 1) :
+    {omega z₁ z₂ : ℂ} (_homega : IsPrimitiveCubicPhase omega)
+    (_hz₁ : Complex.normSq z₁ = 1)
+    (_hz₂ : Complex.normSq z₂ = 1) :
     seamCornerChart 0 0 (affineFourierMatrix omega z₁ z₂) =
       firstSeamChart omega z₁ z₂ := by
   have hreindex :
@@ -203,26 +202,13 @@ theorem seamCornerChart_zero_zero_eq
       fin_cases i <;> fin_cases j <;>
       simp [reindexMatrix, seamRowPermutation, seamColumnPermutation,
         seamRows012, hc0, hc1, hc2, hc3, hc4, hc5,
-        affineFourierMatrix, firstSeamChart] <;> ring
+        affineFourierMatrix, firstSeamChart]
   rw [seamCornerChart, hreindex]
-  have hstarOmega : star omega = omega ^ 2 :=
-    primitiveCubicPhase_star homega
-  have hstarOmegaSq : star (omega ^ 2) = omega := by
-    rw [star_pow, hstarOmega]
-    calc
-      (omega ^ 2) ^ 2 = omega * omega ^ 3 := by ring
-      _ = omega := by rw [primitiveCubicPhase_cube homega, mul_one]
-  have hstarZ₁ : star z₁ * z₁ = 1 :=
-    star_mul_self_of_normSq_one hz₁
-  have hstarZ₂ : star z₂ * z₂ = 1 :=
-    star_mul_self_of_normSq_one hz₂
   ext i j
   rcases i with i | i <;> rcases j with j | j <;>
     fin_cases i <;> fin_cases j <;>
     simp [dephase, phaseTransform, dephaseRowFactor, dephaseColumnFactor,
-      firstSeamChart, hstarOmega, hstarOmegaSq] <;>
-    ring_nf <;>
-    simp [hstarZ₁, hstarZ₂, primitiveCubicPhase_cube homega]
+      firstSeamChart]
 
 private def seamA (x y : ℝ) : ℝ :=
   x ^ 2 * y ^ 2 + x ^ 2 + 8 * x * y + y ^ 2 + 9
@@ -334,7 +320,7 @@ private theorem firstSeam_detE_cayley_clear (x y : ℝ) :
       seamCayleyCoord, pow_two, Complex.mul_re, Complex.mul_im] <;>
     field_simp [hx, hy] <;>
     ring_nf <;>
-    simp only [s3_sq, s3_pow3, s3_pow4] <;> ring
+    simp only [s3_sq] <;> ring
 
 private theorem firstSeam_detB_cayley_clear (x y : ℝ) :
     (((x : ℂ) + Complex.I) * ((y : ℂ) + Complex.I)) *
@@ -353,7 +339,7 @@ private theorem firstSeam_detB_cayley_clear (x y : ℝ) :
       seamCayleyCoord, pow_two, Complex.mul_re, Complex.mul_im] <;>
     field_simp [hx, hy] <;>
     ring_nf <;>
-    simp only [s3_sq, s3_pow3, s3_pow4] <;> ring
+    simp only [s3_sq] <;> ring
 
 private theorem firstSeam_detC_cayley_clear (x y : ℝ) :
     (((x : ℂ) + Complex.I) * ((y : ℂ) + Complex.I)) *
@@ -422,14 +408,13 @@ private theorem firstSeam_B0_formula {z₁ z₂ : ℂ}
     exact (one_div_eq_star_of_normSq_eq_one hz₂).symm
   rw [rowEndpoint0_eq_fibreData _ (by intro j; fin_cases j <;> rfl)]
   simp [firstSeamChart, seamP_B0, fibreS, fibreT, fibreR,
-    hs1, hs2, standardOmega, Complex.star_def]
+    hs1, hs2, standardOmega]
   field_simp [ne_zero_of_normSq_eq_one hz₁,
     ne_zero_of_normSq_eq_one hz₂]
   apply Complex.ext <;>
-    simp [standardOmega, pow_succ, Complex.mul_re, Complex.mul_im] <;>
+    simp [pow_succ, Complex.mul_re, Complex.mul_im] <;>
     ring_nf <;>
-    simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6,
-      s3_pow7, s3_pow8, s3_pow9, s3_pow10] <;> ring
+    simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6] <;> ring
 
 set_option maxRecDepth 100000 in
 private theorem firstSeam_B3_formula {z₁ z₂ : ℂ}
@@ -445,14 +430,13 @@ private theorem firstSeam_B3_formula {z₁ z₂ : ℂ}
     exact (one_div_eq_star_of_normSq_eq_one hz₂).symm
   rw [rowEndpoint3_eq_fibreData _ (by intro j; fin_cases j <;> rfl)]
   simp [firstSeamChart, seamP_B3, fibreS, fibreT, fibreR,
-    hs1, hs2, standardOmega, Complex.star_def]
+    hs1, hs2, standardOmega]
   field_simp [ne_zero_of_normSq_eq_one hz₁,
     ne_zero_of_normSq_eq_one hz₂]
   apply Complex.ext <;>
-    simp [standardOmega, pow_succ, Complex.mul_re, Complex.mul_im] <;>
+    simp [pow_succ, Complex.mul_re, Complex.mul_im] <;>
     ring_nf <;>
-    simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6,
-      s3_pow7, s3_pow8, s3_pow9, s3_pow10] <;> ring
+    simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6] <;> ring
 
 set_option maxRecDepth 100000 in
 private theorem firstSeam_Bswap0_formula {z₁ z₂ : ℂ}
@@ -468,14 +452,13 @@ private theorem firstSeam_Bswap0_formula {z₁ z₂ : ℂ}
     (one_div_eq_star_of_normSq_eq_one hz₂).symm
   rw [rowEndpoint0_eq_fibreData _ (by intro j; fin_cases j <;> rfl)]
   simp [firstSeamChart, swapNoninitialRows, seamP_Bswap0,
-    fibreS, fibreT, fibreR, hs1, hs2, standardOmega, Complex.star_def]
+    fibreS, fibreT, fibreR, hs1, hs2, standardOmega]
   field_simp [ne_zero_of_normSq_eq_one hz₁,
     ne_zero_of_normSq_eq_one hz₂]
   apply Complex.ext <;>
-    simp [standardOmega, pow_succ, Complex.mul_re, Complex.mul_im] <;>
+    simp [pow_succ, Complex.mul_re, Complex.mul_im] <;>
     ring_nf <;>
-    simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6,
-      s3_pow7, s3_pow8, s3_pow9, s3_pow10] <;> ring
+    simp only [s3_sq, s3_pow3, s3_pow4] <;> ring
 
 set_option maxRecDepth 100000 in
 private theorem firstSeam_C0_formula {z₁ z₂ : ℂ}
@@ -491,14 +474,14 @@ private theorem firstSeam_C0_formula {z₁ z₂ : ℂ}
     (one_div_eq_star_of_normSq_eq_one hz₂).symm
   rw [rowEndpoint0_eq_fibreData _ (by intro j; fin_cases j <;> rfl)]
   simp [firstSeamChart, seamP_C0, seamK, fibreS, fibreT, fibreR,
-    hs1, hs2, standardOmega, Complex.star_def]
+    hs1, hs2, standardOmega]
   field_simp [ne_zero_of_normSq_eq_one hz₁,
     ne_zero_of_normSq_eq_one hz₂]
   apply Complex.ext <;>
-    simp [standardOmega, pow_succ, Complex.mul_re, Complex.mul_im] <;>
+    simp [pow_succ, Complex.mul_re, Complex.mul_im] <;>
     ring_nf <;>
     simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6,
-      s3_pow7, s3_pow8, s3_pow9, s3_pow10] <;> ring
+      s3_pow7, s3_pow8, s3_pow9] <;> ring
 
 set_option maxRecDepth 100000 in
 private theorem firstSeam_C3_formula {z₁ z₂ : ℂ}
@@ -514,11 +497,11 @@ private theorem firstSeam_C3_formula {z₁ z₂ : ℂ}
     (one_div_eq_star_of_normSq_eq_one hz₂).symm
   rw [rowEndpoint3_eq_fibreData _ (by intro j; fin_cases j <;> rfl)]
   simp [firstSeamChart, seamP_C3, seamK, fibreS, fibreT, fibreR,
-    hs1, hs2, standardOmega, Complex.star_def]
+    hs1, hs2, standardOmega]
   field_simp [ne_zero_of_normSq_eq_one hz₁,
     ne_zero_of_normSq_eq_one hz₂]
   apply Complex.ext <;>
-    simp [standardOmega, pow_succ, Complex.mul_re, Complex.mul_im] <;>
+    simp [pow_succ, Complex.mul_re, Complex.mul_im] <;>
     ring_nf <;>
     simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6,
       s3_pow7, s3_pow8, s3_pow9, s3_pow10] <;> ring
@@ -537,14 +520,14 @@ private theorem firstSeam_Cswap0_formula {z₁ z₂ : ℂ}
     (one_div_eq_star_of_normSq_eq_one hz₂).symm
   rw [rowEndpoint0_eq_fibreData _ (by intro j; fin_cases j <;> rfl)]
   simp [firstSeamChart, swapNoninitialRows, seamP_Cswap0, seamK,
-    fibreS, fibreT, fibreR, hs1, hs2, standardOmega, Complex.star_def]
+    fibreS, fibreT, fibreR, hs1, hs2, standardOmega]
   field_simp [ne_zero_of_normSq_eq_one hz₁,
     ne_zero_of_normSq_eq_one hz₂]
   apply Complex.ext <;>
-    simp [standardOmega, pow_two, Complex.mul_re, Complex.mul_im] <;>
+    simp [pow_two, Complex.mul_re, Complex.mul_im] <;>
     ring_nf <;>
     simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6,
-      s3_pow7, s3_pow8, s3_pow9, s3_pow10] <;> ring
+      s3_pow7, s3_pow8, s3_pow9] <;> ring
 
 set_option maxRecDepth 100000 in
 private theorem firstSeam_Bswap3_formula {z₁ z₂ : ℂ}
@@ -560,14 +543,13 @@ private theorem firstSeam_Bswap3_formula {z₁ z₂ : ℂ}
     (one_div_eq_star_of_normSq_eq_one hz₂).symm
   rw [rowEndpoint3_eq_fibreData _ (by intro j; fin_cases j <;> rfl)]
   simp [firstSeamChart, swapNoninitialRows, seamP_B3,
-    fibreS, fibreT, fibreR, hs1, hs2, standardOmega, Complex.star_def]
+    fibreS, fibreT, fibreR, hs1, hs2, standardOmega]
   field_simp [ne_zero_of_normSq_eq_one hz₁,
     ne_zero_of_normSq_eq_one hz₂]
   apply Complex.ext <;>
-    simp [standardOmega, pow_succ, Complex.mul_re, Complex.mul_im] <;>
+    simp [pow_succ, Complex.mul_re, Complex.mul_im] <;>
     ring_nf <;>
-    simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6,
-      s3_pow7, s3_pow8, s3_pow9, s3_pow10] <;> ring
+    simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6] <;> ring
 
 set_option maxRecDepth 100000 in
 private theorem firstSeam_Cswap3_formula {z₁ z₂ : ℂ}
@@ -583,11 +565,11 @@ private theorem firstSeam_Cswap3_formula {z₁ z₂ : ℂ}
     (one_div_eq_star_of_normSq_eq_one hz₂).symm
   rw [rowEndpoint3_eq_fibreData _ (by intro j; fin_cases j <;> rfl)]
   simp [firstSeamChart, swapNoninitialRows, seamP_C3, seamK,
-    fibreS, fibreT, fibreR, hs1, hs2, standardOmega, Complex.star_def]
+    fibreS, fibreT, fibreR, hs1, hs2, standardOmega]
   field_simp [ne_zero_of_normSq_eq_one hz₁,
     ne_zero_of_normSq_eq_one hz₂]
   apply Complex.ext <;>
-    simp [standardOmega, pow_succ, Complex.mul_re, Complex.mul_im] <;>
+    simp [pow_succ, Complex.mul_re, Complex.mul_im] <;>
     ring_nf <;>
     simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6,
       s3_pow7, s3_pow8, s3_pow9, s3_pow10] <;> ring
@@ -609,8 +591,7 @@ private theorem seamP_B0_pullback_norm (x y : ℝ) :
     Complex.mul_re, Complex.mul_im]
   field_simp [hx, hy]
   ring_nf
-  simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6,
-    s3_pow7, s3_pow8, s3_pow9, s3_pow10]
+  simp only [s3_sq, s3_pow3, s3_pow4]
   ring
 
 set_option maxRecDepth 100000 in
@@ -627,8 +608,7 @@ private theorem seamP_B3_pullback_norm (x y : ℝ) :
     Complex.mul_re, Complex.mul_im]
   field_simp [hx, hy]
   ring_nf
-  simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6,
-    s3_pow7, s3_pow8, s3_pow9, s3_pow10]
+  simp only [s3_sq, s3_pow3, s3_pow4]
   ring
 
 set_option maxRecDepth 100000 in
@@ -645,8 +625,7 @@ private theorem seamP_Bswap0_pullback_norm (x y : ℝ) :
     Complex.mul_re, Complex.mul_im]
   field_simp [hx, hy]
   ring_nf
-  simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6,
-    s3_pow7, s3_pow8, s3_pow9, s3_pow10]
+  simp only [s3_sq]
   ring
 
 set_option maxRecDepth 100000 in
@@ -663,8 +642,7 @@ private theorem seamP_C0_pullback (x y : ℝ) :
       standardOmega, pow_succ, Complex.mul_re, Complex.mul_im] <;>
     field_simp [hx, hy] <;>
     ring_nf <;>
-    simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6,
-      s3_pow7, s3_pow8, s3_pow9, s3_pow10] <;> ring
+    simp only [s3_sq, s3_pow3, s3_pow4] <;> ring
 
 set_option maxRecDepth 100000 in
 private theorem seamP_C3_pullback (x y : ℝ) :
@@ -681,8 +659,7 @@ private theorem seamP_C3_pullback (x y : ℝ) :
       Complex.mul_re, Complex.mul_im] <;>
     field_simp [hx, hy] <;>
     ring_nf <;>
-    simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6,
-      s3_pow7, s3_pow8, s3_pow9, s3_pow10] <;> ring
+    simp only [s3_sq, s3_pow3, s3_pow4] <;> ring
 
 set_option maxRecDepth 100000 in
 private theorem seamP_Cswap0_pullback (x y : ℝ) :
@@ -699,8 +676,7 @@ private theorem seamP_Cswap0_pullback (x y : ℝ) :
       Complex.mul_re, Complex.mul_im] <;>
     field_simp [hx, hy] <;>
     ring_nf <;>
-    simp only [s3_sq, s3_pow3, s3_pow4, s3_pow5, s3_pow6,
-      s3_pow7, s3_pow8, s3_pow9, s3_pow10] <;> ring
+    simp only [s3_sq, s3_pow3, s3_pow4] <;> ring
 
 /-- The six finite Cayley pairs at which the first seam corner can fail. -/
 private def FirstSeamExceptional (x y : ℝ) : Prop :=
@@ -735,9 +711,9 @@ private theorem firstSeam_detE_zero_cases {x y : ℝ}
   have hmk : (0 : ℂ) =
       ⟨-s3 * (x + y),
         2 * s3 * (x * y + s3 * (x - y) / 2)⟩ := by
-    convert hid using 1 <;>
-      apply Complex.ext <;>
-      simp [Complex.mul_re, Complex.mul_im] <;> ring
+    convert hid using 1
+    all_goals apply Complex.ext
+    all_goals simp [Complex.mul_re, Complex.mul_im]
   have hre := congrArg Complex.re hmk
   have him := congrArg Complex.im hmk
   have hsum : x + y = 0 := by
@@ -762,9 +738,9 @@ private theorem firstSeam_detB_zero_cases {x y : ℝ}
   have hmk : (0 : ℂ) =
       ⟨s3 * (x + y),
         -(2 * s3 * (x * y + s3 * (x - y) / 2))⟩ := by
-    convert hid using 1 <;>
-      apply Complex.ext <;>
-      simp [Complex.mul_re, Complex.mul_im] <;> ring
+    convert hid using 1
+    all_goals apply Complex.ext
+    all_goals simp [Complex.mul_re, Complex.mul_im]
   have hre := congrArg Complex.re hmk
   have him := congrArg Complex.im hmk
   have hsum : x + y = 0 := by
@@ -789,9 +765,9 @@ private theorem firstSeam_detC_zero_cases {x y : ℝ}
   have hmk : (0 : ℂ) =
       ⟨s3 * (x + y),
         2 * s3 * (x * y + s3 * (x - y) / 2)⟩ := by
-    convert hid using 1 <;>
-      apply Complex.ext <;>
-      simp [Complex.mul_re, Complex.mul_im] <;> ring
+    convert hid using 1
+    all_goals apply Complex.ext
+    all_goals simp [Complex.mul_re, Complex.mul_im]
   have hre := congrArg Complex.re hmk
   have him := congrArg Complex.im hmk
   have hsum : x + y = 0 := by
@@ -852,6 +828,7 @@ private theorem seamP_Bswap0_zero_cases {x y : ℝ}
   exact low_endpoint_cases_of_AQ hprod
 
 set_option maxHeartbeats 1000000 in
+-- Exact nonlinear elimination on this seam branch needs the enlarged budget.
 private theorem seamP_C0_zero_cases {x y : ℝ}
     (h : seamP_C0 (seamCayley x) (seamCayley y) = 0) :
     FirstSeamExceptional x y := by
@@ -954,6 +931,7 @@ private theorem seamP_C0_zero_cases {x y : ℝ}
         exact Or.inr (Or.inr (Or.inl ⟨hx, hy⟩))
 
 set_option maxHeartbeats 1000000 in
+-- Exact nonlinear elimination on this seam branch needs the enlarged budget.
 private theorem seamP_C3_zero_cases {x y : ℝ}
     (h : seamP_C3 (seamCayley x) (seamCayley y) = 0) :
     FirstSeamExceptional x y := by
@@ -991,8 +969,10 @@ private theorem seamP_C3_zero_cases {x y : ℝ}
     have hy : y = s3 := by
       rcases hI with hsum | hL
       · linarith
-      · simp [seamLminus, hx] at hL
-        have hprod : s3 * (y - s3) = 0 := by nlinarith [s3_sq]
+      · have hL' :
+            (-s3) * y - s3 * (-s3) / 3 + s3 * y / 3 + 1 = 0 := by
+          simpa only [seamLminus, hx] using hL
+        have hprod : s3 * (y - s3) = 0 := by nlinarith [hL', s3_sq]
         exact (mul_eq_zero.mp hprod).resolve_left (ne_of_gt s3_pos) |> sub_eq_zero.mp
     exact Or.inr (Or.inr (Or.inl ⟨hx, hy⟩))
   rcases hR with hxy | hR
@@ -1006,8 +986,10 @@ private theorem seamP_C3_zero_cases {x y : ℝ}
     have hx : x = -s3 := by
       rcases hI with hsum | hL
       · linarith
-      · simp [seamLminus, hy] at hL
-        have hprod : s3 * (x + s3) = 0 := by nlinarith [s3_sq]
+      · have hL' :
+            x * s3 - s3 * x / 3 + s3 * s3 / 3 + 1 = 0 := by
+          simpa only [seamLminus, hy] using hL
+        have hprod : s3 * (x + s3) = 0 := by nlinarith [hL', s3_sq]
         have : x + s3 = 0 :=
           (mul_eq_zero.mp hprod).resolve_left (ne_of_gt s3_pos)
         linarith
@@ -1016,7 +998,9 @@ private theorem seamP_C3_zero_cases {x y : ℝ}
     · have hy : y = -x := by linarith
       have hfactor : (x - s3) * (x + s3 / 3) = 0 := by
         have hz : -x ^ 2 + 2 * s3 * x / 3 + 1 = 0 := by
-          convert hLplus using 1 <;> simp [seamLplus, hy] <;> ring
+          convert hLplus using 1
+          all_goals simp [seamLplus, hy]
+          all_goals ring
         have hidf :
             -((x - s3) * (x + s3 / 3)) =
               -x ^ 2 + 2 * s3 * x / 3 + 1 := by
@@ -1040,6 +1024,7 @@ private theorem seamP_C3_zero_cases {x y : ℝ}
       nlinarith [sq_nonneg y]
 
 set_option maxHeartbeats 1000000 in
+-- Exact nonlinear elimination on this seam branch needs the enlarged budget.
 private theorem seamP_Cswap0_zero_cases {x y : ℝ}
     (h : seamP_Cswap0 (seamCayley x) (seamCayley y) = 0) :
     FirstSeamExceptional x y := by
@@ -1287,6 +1272,7 @@ macro "close_standard_seam_corner" h:term : tactic => `(tactic| exact (by
 /-! The six rows of the exceptional-point certificate table. -/
 
 set_option maxHeartbeats 1000000 in
+-- The exact exceptional-corner normalization needs the enlarged budget.
 set_option maxRecDepth 100000 in
 private theorem exceptional00_corner21 :
     leadingFiniteCornerWitnessProduct
@@ -1299,6 +1285,7 @@ private theorem exceptional00_corner21 :
   close_standard_seam_corner h
 
 set_option maxHeartbeats 1000000 in
+-- The exact exceptional-corner normalization needs the enlarged budget.
 set_option maxRecDepth 100000 in
 private theorem exceptional_s_neg_s_corner11 :
     leadingFiniteCornerWitnessProduct
@@ -1313,6 +1300,7 @@ private theorem exceptional_s_neg_s_corner11 :
   close_standard_seam_corner h
 
 set_option maxHeartbeats 1000000 in
+-- The exact exceptional-corner normalization needs the enlarged budget.
 set_option maxRecDepth 100000 in
 private theorem exceptional_neg_s_s_corner01 :
     leadingFiniteCornerWitnessProduct
@@ -1327,6 +1315,7 @@ private theorem exceptional_neg_s_s_corner01 :
   close_standard_seam_corner h
 
 set_option maxHeartbeats 1000000 in
+-- The exact exceptional-corner normalization needs the enlarged budget.
 set_option maxRecDepth 100000 in
 private theorem exceptional_neg_third_s_neg_s_corner10 :
     leadingFiniteCornerWitnessProduct
@@ -1341,6 +1330,7 @@ private theorem exceptional_neg_third_s_neg_s_corner10 :
   close_standard_seam_corner h
 
 set_option maxHeartbeats 1000000 in
+-- The exact exceptional-corner normalization needs the enlarged budget.
 set_option maxRecDepth 100000 in
 private theorem exceptional_neg_third_s_third_s_corner10 :
     leadingFiniteCornerWitnessProduct
@@ -1355,6 +1345,7 @@ private theorem exceptional_neg_third_s_third_s_corner10 :
   close_standard_seam_corner h
 
 set_option maxHeartbeats 1000000 in
+-- The exact exceptional-corner normalization needs the enlarged budget.
 set_option maxRecDepth 100000 in
 private theorem exceptional_s_third_s_corner10 :
     leadingFiniteCornerWitnessProduct
@@ -1369,6 +1360,7 @@ private theorem exceptional_s_third_s_corner10 :
   close_standard_seam_corner h
 
 set_option maxHeartbeats 1000000 in
+-- The exact exceptional-corner normalization needs the enlarged budget.
 set_option maxRecDepth 100000 in
 private theorem boundary_neg_one_neg_omega_sq_corner10 :
     leadingFiniteCornerWitnessProduct
@@ -1383,6 +1375,7 @@ private theorem boundary_neg_one_neg_omega_sq_corner10 :
   close_standard_seam_corner h
 
 set_option maxHeartbeats 1000000 in
+-- The exact exceptional-corner normalization needs the enlarged budget.
 set_option maxRecDepth 100000 in
 private theorem boundary_neg_omega_neg_one_corner10 :
     leadingFiniteCornerWitnessProduct
@@ -1538,7 +1531,7 @@ private theorem leadingCertificate_swapBlockNoninitialRows {H : Mat6}
       rowEndpoint3_swapNoninitialColumns] using h.C_swapped_endpoint3
 
 private theorem seamCorner20_eq_swap_first {z₁ z₂ : ℂ}
-    (hz₁ : Complex.normSq z₁ = 1) (hz₂ : Complex.normSq z₂ = 1) :
+    (_hz₁ : Complex.normSq z₁ = 1) (_hz₂ : Complex.normSq z₂ = 1) :
     seamCornerChart (2 : I3) (0 : I2)
         (affineFourierMatrix standardOmega z₁ z₂) =
       swapBlockNoninitialRows
@@ -1552,31 +1545,19 @@ private theorem seamCorner20_eq_swap_first {z₁ z₂ : ℂ}
   rcases seamRows025_order with ⟨hr0, hr1, hr2, hr3, hr4, hr5⟩
   rcases seamColumns024_order with ⟨hc0, hc1, hc2, hc3, hc4, hc5⟩
   have homega := standardOmega_isPrimitiveCubicPhase
-  have hstarOmega : star standardOmega = standardOmega ^ 2 :=
-    primitiveCubicPhase_star homega
-  have hstarOmegaSq : star (standardOmega ^ 2) = standardOmega := by
-    rw [star_pow, hstarOmega]
-    calc
-      (standardOmega ^ 2) ^ 2 = standardOmega * standardOmega ^ 3 := by ring
-      _ = standardOmega := by rw [primitiveCubicPhase_cube homega, mul_one]
   have hpow4 : standardOmega ^ 4 = standardOmega := by
     calc
       standardOmega ^ 4 = standardOmega * standardOmega ^ 3 := by ring
       _ = standardOmega := by rw [primitiveCubicPhase_cube homega, mul_one]
-  have hstarZ₁ : star z₁ * z₁ = 1 :=
-    star_mul_self_of_normSq_one hz₁
-  have hstarZ₂ : star z₂ * z₂ = 1 :=
-    star_mul_self_of_normSq_one hz₂
   ext i j
   rcases i with i | i <;> rcases j with j | j <;>
     fin_cases i <;> fin_cases j <;>
-    simp [seamCornerChart, dephase, phaseTransform, dephaseRowFactor,
+    simp [dephase, phaseTransform, dephaseRowFactor,
       dephaseColumnFactor, reindexMatrix, hr0, hr1, hr2, hr3, hr4, hr5,
       hc0, hc1, hc2, hc3, hc4, hc5, affineFourierMatrix,
-      swapBlockNoninitialRows, firstSeamChart, hstarOmega,
-      hstarOmegaSq] <;>
+      swapBlockNoninitialRows, firstSeamChart] <;>
     ring_nf <;>
-    simp [hstarZ₁, hstarZ₂, hpow4, primitiveCubicPhase_cube homega]
+    simp [hpow4, primitiveCubicPhase_cube homega]
 
 private theorem corner20_witness_of_first_transformed
     {z₁ z₂ : ℂ} (hz₁ : Complex.normSq z₁ = 1)
@@ -1734,7 +1715,8 @@ private theorem transpose_columnGram (X : Mat3) :
     Matrix.conjTranspose X.transpose * X.transpose =
       transposeGram (X * Matrix.conjTranspose X) := by
   ext i j
-  simp [transposeGram, Matrix.mul_apply, Matrix.conjTranspose_apply]
+  simp only [transposeGram, Matrix.mul_apply, Matrix.conjTranspose_apply,
+    Matrix.transpose_apply]
   apply Finset.sum_congr rfl
   intro k hk
   ring
@@ -1865,7 +1847,7 @@ private theorem reindex_standardOmega_eq_squaredOmega (z₁ z₂ : ℂ) :
   rcases i with i | i <;> rcases j with j | j <;>
     fin_cases i <;> fin_cases j <;>
     simp [reindexMatrix, h0, h1, h2, h3, h4, h5,
-      affineFourierMatrix, hcube, hpow4] <;>
+      affineFourierMatrix] <;>
     ring_nf <;> simp [hpow4]
 
 private theorem standard_affine_fourier_mem_finiteCornerAtlas

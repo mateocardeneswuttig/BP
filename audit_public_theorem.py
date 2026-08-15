@@ -26,6 +26,7 @@ ALLOWED_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
 FORBIDDEN = re.compile(
     r"\b(?:sorry|admit|axiom|constant|opaque|unsafe)\b|\bnative_decide\b"
 )
+PROJECT_IMPORT = re.compile(r"^import\s+(Hadamard6(?:\.[A-Za-z0-9_]+)+)\s*$", re.MULTILINE)
 
 
 def code_without_comments_or_strings(source: str) -> str:
@@ -100,6 +101,31 @@ def source_audit() -> None:
     )
 
 
+def dependency_audit() -> None:
+    """Reject source modules not reachable from the paper-facing root."""
+    sources = {path.relative_to(ROOT) for path in (ROOT / "Hadamard6").glob("*.lean")}
+    root = Path("Hadamard6.lean")
+    pending = [root]
+    reached: set[Path] = set()
+    while pending:
+        path = pending.pop()
+        if path in reached:
+            continue
+        reached.add(path)
+        source = (ROOT / path).read_text(encoding="utf-8")
+        for module in PROJECT_IMPORT.findall(source):
+            imported = Path(*module.split(".")).with_suffix(".lean")
+            if imported in sources and imported not in reached:
+                pending.append(imported)
+    unreachable = sorted(sources - reached)
+    if unreachable:
+        raise AssertionError(
+            "Lean modules outside the public dependency graph:\n"
+            + "\n".join(str(path) for path in unreachable)
+        )
+    print(f"PASS all {len(sources)} Hadamard6 modules are reachable from Hadamard6.lean")
+
+
 def axiom_audit(lake: str) -> None:
     completed = subprocess.run(
         [lake, "env", "lean", "Hadamard6/PaperTheorem.lean"],
@@ -146,6 +172,7 @@ def main() -> int:
     parser.add_argument("--lake", default="lake")
     args = parser.parse_args()
     source_audit()
+    dependency_audit()
     axiom_audit(args.lake)
     print("ALL PUBLIC LEAN SOURCE AND AXIOM CHECKS PASSED")
     return 0

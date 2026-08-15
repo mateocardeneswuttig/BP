@@ -14,11 +14,6 @@ namespace Hadamard6
 
 variable {IsTao IsKarlsson : Mat6 → Prop}
 
-theorem finite_of_not_infinite {α : Type} {S : Set α}
-    (h : ¬ S.Infinite) : S.Finite := by
-  by_contra hfin
-  exact h (Set.not_finite.mp hfin)
-
 theorem blockSwap_from_published_inputs
     (pub : PublishedInputs IsTao IsKarlsson) :
     ∀ H, IsHadamard H → ¬ IsKarlsson H →

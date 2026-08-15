@@ -17,7 +17,8 @@ theorem transpose_rowGram (X : Mat3) :
     X.transpose * Matrix.conjTranspose X.transpose =
       transposeGram (Matrix.conjTranspose X * X) := by
   ext i j
-  simp [transposeGram, Matrix.mul_apply, Matrix.conjTranspose_apply]
+  simp only [transposeGram, Matrix.mul_apply, Matrix.conjTranspose_apply,
+    Matrix.transpose_apply]
   apply Finset.sum_congr rfl
   intro k hk
   ring

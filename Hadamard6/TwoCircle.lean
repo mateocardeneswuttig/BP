@@ -57,8 +57,8 @@ theorem phasePairs_finite {c : ℂ} (hc : c ≠ 0) :
     Polynomial.finite_setOfPred_isRoot hp
   apply Set.Finite.of_finite_image
   · apply hrootFinite.subset
-    rintro u ⟨⟨u', v⟩, huv, rfl⟩
-    exact phasePair_first_isRoot huv.1 huv.2.1 huv.2.2
+    · rintro u ⟨⟨u', v⟩, huv, rfl⟩
+      exact phasePair_first_isRoot huv.1 huv.2.1 huv.2.2
   · rintro ⟨u, v⟩ huv ⟨u', v'⟩ huv' hfirst
     cases hfirst
     have hsecond : v = v' :=

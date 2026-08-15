@@ -1,4 +1,6 @@
 import Hadamard6.ConcreteClassification
+import Hadamard6.H2KarlssonParametrization
+import Hadamard6.KarlssonContainment
 
 /-!
 # Equivalence classes of order-six Hadamard matrices
@@ -63,18 +65,6 @@ def TaoClasses : Set HadamardClass6 := {q | TaoClass q}
     TaoClass (Quotient.mk had6EquivalenceSetoid H) ↔ IsTaoOrbit H.1 :=
   Iff.rfl
 
-/-- Quotient-level form of the paper's classification corollary: every
-Hadamard equivalence class belongs to the total finite-corner atlas. -/
-theorem finiteCornerAtlasClasses_eq_univ (inputs : PaperClassificationInputs) :
-    FiniteCornerAtlasClasses = Set.univ := by
-  apply Set.eq_univ_of_forall
-  intro q
-  induction q using Quotient.inductionOn with
-  | _ H =>
-      change InFiniteCornerAtlas H.1
-      exact hadamard_mem_finiteCornerAtlas_of_paperClassificationInputs
-        inputs H.2
-
 /-- Tao containment in the quotient atlas is unconditional. -/
 theorem taoClasses_subset_finiteCornerAtlasClasses :
     TaoClasses ⊆ FiniteCornerAtlasClasses := by
@@ -88,7 +78,7 @@ theorem taoClasses_subset_finiteCornerAtlasClasses :
 /-- Karlsson containment follows from published global chart coverage; the
 regular chart and affine-Fourier seam certificate are internal. -/
 theorem karlssonClasses_subset_finiteCornerAtlasClasses
-    (inputs : PaperClassificationInputs) :
+    (hkarlsson : IntrinsicKarlssonSeamIdentification) :
     KarlssonClasses ⊆ FiniteCornerAtlasClasses := by
   intro q hq
   induction q using Quotient.inductionOn with
@@ -97,7 +87,7 @@ theorem karlssonClasses_subset_finiteCornerAtlasClasses
       change InFiniteCornerAtlas H.1
       exact hasHadamardTwoByTwo_mem_finiteCornerAtlas
         (karlssonRawOrSeamCoverage_of_intrinsic_seam
-          inputs.publishedKarlssonSeamIdentification) H.2 hq.2
+          hkarlsson) H.2 hq.2
 
 /-- The named Tao and Karlsson loci are disjoint on equivalence classes. -/
 theorem taoClasses_disjoint_karlssonClasses :
@@ -135,11 +125,11 @@ theorem standardTaoClass_not_mem_karlssonClasses :
 /-- Quotient-level proper containment.  This formulation avoids any
 notation-dependent definition of strict set inclusion. -/
 theorem karlssonClasses_properly_contained_in_finiteCornerAtlasClasses
-    (inputs : PaperClassificationInputs) :
+    (hkarlsson : IntrinsicKarlssonSeamIdentification) :
     KarlssonClasses ⊆ FiniteCornerAtlasClasses ∧
       ¬ FiniteCornerAtlasClasses ⊆ KarlssonClasses := by
   constructor
-  · exact karlssonClasses_subset_finiteCornerAtlasClasses inputs
+  · exact karlssonClasses_subset_finiteCornerAtlasClasses hkarlsson
   · intro hreverse
     exact standardTaoClass_not_mem_karlssonClasses
       (hreverse standardTaoClass_mem_finiteCornerAtlasClasses)

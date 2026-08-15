@@ -79,13 +79,6 @@ theorem primitiveCubicPhase_sum_sq {omega : ℂ}
     (homega : IsPrimitiveCubicPhase omega) : omega + omega ^ 2 = -1 := by
   linear_combination homega.2
 
-theorem primitiveCubicPhase_not_neg_self {omega : ℂ}
-    (homega : IsPrimitiveCubicPhase omega) : omega ≠ -omega := by
-  intro h
-  have htwo : (2 : ℂ) * omega = 0 := by linear_combination h
-  exact primitiveCubicPhase_ne_zero homega
-    ((mul_eq_zero.mp htwo).resolve_left (by norm_num))
-
 theorem primitiveCubicPhase_sq_not_neg_sq {omega : ℂ}
     (homega : IsPrimitiveCubicPhase omega) : omega ^ 2 ≠ -(omega ^ 2) := by
   intro h
@@ -110,7 +103,9 @@ theorem primitiveCubicPhase_sq_not_neg {omega : ℂ}
 theorem taoB_det {omega : ℂ} (homega : IsPrimitiveCubicPhase omega) :
     (taoB omega).det = 3 := by
   rw [Matrix.det_fin_three]
-  simp [taoB]
+  simp only [taoB, Fin.isValue, Matrix.of_apply, Matrix.cons_val',
+    Matrix.cons_val_zero, Matrix.cons_val_fin_one, Matrix.cons_val_one,
+    one_mul, Matrix.cons_val]
   have hcube := primitiveCubicPhase_cube homega
   have hfour : omega ^ 4 = omega := by
     calc
@@ -175,14 +170,13 @@ theorem taoB_rowTau {omega : ℂ}
 
 theorem taoB_noOppositePair {omega : ℂ}
     (homega : IsPrimitiveCubicPhase omega) :
-    ¬ HasOppositePairInNoninitialRow (taoB omega) := by
+  ¬ HasOppositePairInNoninitialRow (taoB omega) := by
   rintro ⟨i, hi, j, k, hjk, hopp⟩
-  have hself := primitiveCubicPhase_not_neg_self homega
   have hsquare := primitiveCubicPhase_sq_not_neg_sq homega
   have hmix₁ := primitiveCubicPhase_not_neg_sq homega
   have hmix₂ := primitiveCubicPhase_sq_not_neg homega
   fin_cases i <;> fin_cases j <;> fin_cases k <;>
-    simp [taoB, hself, hsquare, hmix₁, hmix₂] at hi hjk hopp
+    simp [taoB, hsquare, hmix₁, hmix₂] at hi hjk hopp
 
 theorem tao_horizontalCandidates_finite {omega : ℂ}
     (homega : IsPrimitiveCubicPhase omega) :

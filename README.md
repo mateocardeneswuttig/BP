@@ -86,10 +86,10 @@ lake build
 
 The default target intentionally imports only the paper-facing theorem spine,
 so both commands verify the classification audit rather than unrelated
-experimental work.  A fresh full build can take several minutes; a few exact
-symbolic certificate modules dominate the running time.  Mathlib may print
-style or unused-simplification warnings.  These are non-fatal and are not
-proof gaps.
+experimental work. A fresh full build can take several minutes; a few exact
+symbolic certificate modules dominate the running time. Lean may also print
+informational tactic suggestions and standard-foundation axiom reports. These
+are not proof gaps.
 
 ### 5. Run the trust-boundary audit
 
@@ -109,6 +109,7 @@ A successful run ends with:
 
 ```text
 PASS Lean source contains no sorry, admit, project axiom/constant, opaque/unsafe declaration, or native_decide
+PASS all 89 Hadamard6 modules are reachable from Hadamard6.lean
 PASS nine paper-facing axiom reports use only propext, Classical.choice, and Quot.sound
 ALL PUBLIC LEAN SOURCE AND AXIOM CHECKS PASSED
 ```
@@ -166,6 +167,16 @@ root [`Hadamard6.lean`](Hadamard6.lean) imports
 `Hadamard6.PaperTheorem`, which in turn fixes the complete public dependency
 graph.
 
+Two unusually large files are exact arithmetic backends rather than extra
+classification layers: `KarlssonResidualCertificate.lean` is a generated
+Bernstein-positivity table and `KarlssonWitnessResultants.lean` contains
+generated resultant identities. Their short consumers are
+`KarlssonResidualGlobal.lean` and `KarlssonMixedBlocks.lean`. The remaining
+large seam file is a direct, theorem-structured six-corner calculation. This
+separation matters when reading the project: start from `PaperTheorem.lean`
+and descend into a certificate backend only when auditing that particular
+arithmetic identity.
+
 For a theorem-by-theorem correspondence with the manuscript, read
 [`PAPER_PROOF_MAP.md`](PAPER_PROOF_MAP.md).  For the exact cubic criterion and
 its formalization status, read
@@ -174,18 +185,20 @@ its formalization status, read
 ## Why `lake build` reports thousands of jobs
 
 Lake counts every compiled module in the pinned Mathlib dependency graph as a
-job.  The count is not the number of assumptions, classification cases, or
-independent Hadamard arguments.  At the pinned versions used for the audited
-build, Lake reports 3,487 jobs.  The human-readable logical spine remains the
-nine endpoints in `PaperTheorem.lean`; the deeper modules supply their exact
-algebra and certificate proofs.
+job. The count is not the number of assumptions, classification cases, or
+independent Hadamard arguments. A full build reports roughly 3,500 jobs, the
+overwhelming majority inherited from Mathlib. The human-readable logical
+spine remains the nine endpoints in `PaperTheorem.lean`; the deeper modules
+supply their exact algebra and certificate proofs.
 
 ## Trust statement
 
 The source audit rejects `sorry`, `admit`, project-defined `axiom` or
 `constant`, source-level `opaque` or `unsafe` declarations, and unchecked
-`native_decide`.  `#print axioms` is run on all nine public endpoints and may
-report only Lean/Mathlib's standard foundations `propext`,
+`native_decide`. It also rejects orphaned proof modules outside the
+paper-facing dependency graph, preventing obsolete alternative APIs from
+silently remaining in the project. `#print axioms` is run on all nine public
+endpoints and may report only Lean/Mathlib's standard foundations `propext`,
 `Classical.choice`, and `Quot.sound`.
 
 That kernel report checks the Lean proof terms.  It does not erase the two

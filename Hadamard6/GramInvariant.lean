@@ -125,8 +125,9 @@ theorem offDiagonal_neg_of_sum_sixI3
     {G K : Mat3} (h : G + K = sixI3)
     {i j : I3} (hij : i ≠ j) : K i j = -G i j := by
   have hijEntry := congrArg (fun M : Mat3 ↦ M i j) h
-  simp [sixI3, hij] at hijEntry
-  exact eq_neg_of_add_eq_zero_right hijEntry
+  have hzero : G i j + K i j = 0 := by
+    simpa [sixI3, hij] using hijEntry
+  exact eq_neg_of_add_eq_zero_right hzero
 
 theorem rowTau_complement {E B : Mat3}
     (h : E * Matrix.conjTranspose E +

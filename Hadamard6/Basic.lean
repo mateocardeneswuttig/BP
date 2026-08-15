@@ -132,12 +132,6 @@ permutations and unit row/column phases. -/
 theorem equivalent_equivalence : Equivalence Equivalent :=
   ⟨equivalent_refl, equivalent_symm, equivalent_trans⟩
 
-/-- The setoid used later to form equivalence classes of order-six
-matrices. -/
-def matrixEquivalenceSetoid : Setoid Mat6 where
-  r := Equivalent
-  iseqv := equivalent_equivalence
-
 theorem cornerData_entrywiseUnit (p : CornerData) :
     EntrywiseUnit p.matrix := by
   intro i j

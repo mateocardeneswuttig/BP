@@ -38,9 +38,9 @@ theorem specialized_eliminant_relation
         (specializedBeta2 s T R) (specializedBeta3 s T R) x * y = 0 := by
   have he := eliminant_eq_zero hf hg
   rw [eliminantA_factorization, eliminantB_coefficients] at he
-  have hstars : star (s : ℂ) = (s : ℂ) := by simp [Complex.star_def]
+  have hstars : star (s : ℂ) = (s : ℂ) := by simp
   have hdelta : R * star R - T * star T = gramDelta T R := by
-    simp [gramDelta, Complex.normSq_eq_conj_mul_self, Complex.star_def,
+    simp [gramDelta, Complex.normSq_eq_conj_mul_self,
       mul_comm]
   have hkappa :
       kappa (s : ℂ) x =
@@ -133,7 +133,7 @@ theorem specialized_relations_all_coordinates
   intro p hp
   have hfg := clearedHaagerup_all_coordinates hx₁ hx₂ hx₃ hy₁ hy₂ hy₃ p hp
   rw [hsum] at hfg
-  have hstars : star (s : ℂ) = (s : ℂ) := by simp [Complex.star_def]
+  have hstars : star (s : ℂ) = (s : ℂ) := by simp
   rw [hstars] at hfg
   exact specialized_eliminant_relation hfg.1 hfg.2
 

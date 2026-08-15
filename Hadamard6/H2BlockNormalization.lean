@@ -113,8 +113,9 @@ private theorem h2CoreAB_rowGram
       unit_mul_star_eq_one h.z₃_unit
     have hpair := h.column_pair₁
     simp only [h2Tail₀, h2Tail₁] at hz₃ hpair
-    simp [h2Tail₀, h2Tail₁,
-      h.dephased.2, hpair] at hentry
+    simp only [h2Tail₀, Fin.isValue, h.dephased.2, h2Tail₁, star_one,
+      mul_one, hpair, star_neg, RCLike.star_def, mul_neg, reduceCtorEq,
+      ↓reduceIte, smul_eq_mul, mul_zero] at hentry
     rw [hz₃] at hentry
     norm_num at hentry
     simpa [h2CoreA, h2CoreB, Matrix.mul_apply,
@@ -129,8 +130,9 @@ private theorem h2CoreAB_rowGram
       unit_mul_star_eq_one h.z₃_unit
     have hpair := h.column_pair₁
     simp only [h2Tail₀, h2Tail₁] at hz₃ hpair
-    simp [h2Tail₀, h2Tail₁,
-      h.dephased.2, hpair] at hentry
+    simp only [h2Tail₁, Fin.isValue, h.dephased.2, h2Tail₀, star_one,
+      mul_one, hpair, RCLike.star_def, neg_mul, reduceCtorEq, ↓reduceIte,
+      smul_eq_mul, mul_zero] at hentry
     rw [hz₃] at hentry
     norm_num at hentry
     simpa [h2CoreA, h2CoreB, Matrix.mul_apply,
@@ -163,8 +165,9 @@ private theorem h2CoreCD_rowGram
       unit_mul_star_eq_one h.z₄_unit
     have hpair := h.column_pair₂
     simp only [h2Tail₂, h2Tail₃] at hz₄ hpair
-    simp [h2Tail₂, h2Tail₃,
-      h.dephased.2, hpair] at hentry
+    simp only [h2Tail₂, Fin.isValue, h.dephased.2, h2Tail₃, star_one,
+      mul_one, hpair, star_neg, RCLike.star_def, mul_neg, Sum.inr.injEq,
+      Fin.reduceEq, ↓reduceIte, smul_eq_mul, mul_zero] at hentry
     rw [hz₄] at hentry
     norm_num at hentry
     simpa [h2CoreC, h2CoreD, Matrix.mul_apply,
@@ -179,8 +182,9 @@ private theorem h2CoreCD_rowGram
       unit_mul_star_eq_one h.z₄_unit
     have hpair := h.column_pair₂
     simp only [h2Tail₂, h2Tail₃] at hz₄ hpair
-    simp [h2Tail₂, h2Tail₃,
-      h.dephased.2, hpair] at hentry
+    simp only [h2Tail₃, Fin.isValue, h.dephased.2, h2Tail₂, star_one,
+      mul_one, hpair, RCLike.star_def, neg_mul, Sum.inr.injEq,
+      Fin.reduceEq, ↓reduceIte, smul_eq_mul, mul_zero] at hentry
     rw [hz₄] at hentry
     norm_num at hentry
     simpa [h2CoreC, h2CoreD, Matrix.mul_apply,
@@ -214,8 +218,9 @@ private theorem h2CoreAC_columnGram
       star_mul_unit_eq_one h.z₁_unit
     have hpair := h.row_pair₁
     simp only [h2Tail₀, h2Tail₁] at hz₁ hpair
-    simp [h2Tail₀, h2Tail₁,
-      h.dephased.1, hpair] at hentry
+    simp only [Fin.isValue, h2Tail₀, h.dephased.1, star_one, h2Tail₁,
+      mul_one, RCLike.star_def, hpair, mul_neg, reduceCtorEq, ↓reduceIte,
+      smul_eq_mul, mul_zero] at hentry
     rw [hz₁] at hentry
     norm_num at hentry
     simpa [h2CoreA, h2CoreC, Matrix.mul_apply,
@@ -231,8 +236,9 @@ private theorem h2CoreAC_columnGram
       star_mul_unit_eq_one h.z₁_unit
     have hpair := h.row_pair₁
     simp only [h2Tail₀, h2Tail₁] at hz₁ hpair
-    simp [h2Tail₀, h2Tail₁,
-      h.dephased.1, hpair] at hentry
+    simp only [Fin.isValue, h2Tail₁, h.dephased.1, star_one, h2Tail₀,
+      mul_one, hpair, star_neg, RCLike.star_def, neg_mul, reduceCtorEq,
+      ↓reduceIte, smul_eq_mul, mul_zero] at hentry
     rw [hz₁] at hentry
     norm_num at hentry
     simpa [h2CoreA, h2CoreC, Matrix.mul_apply,
@@ -266,8 +272,9 @@ private theorem h2CoreBD_columnGram
       star_mul_unit_eq_one h.z₂_unit
     have hpair := h.row_pair₂
     simp only [h2Tail₂, h2Tail₃] at hz₂ hpair
-    simp [h2Tail₂, h2Tail₃,
-      h.dephased.1, hpair] at hentry
+    simp only [Fin.isValue, h2Tail₂, h.dephased.1, star_one, h2Tail₃,
+      mul_one, RCLike.star_def, hpair, mul_neg, Sum.inr.injEq,
+      Fin.reduceEq, ↓reduceIte, smul_eq_mul, mul_zero] at hentry
     rw [hz₂] at hentry
     norm_num at hentry
     simpa [h2CoreB, h2CoreD, Matrix.mul_apply,
@@ -283,8 +290,9 @@ private theorem h2CoreBD_columnGram
       star_mul_unit_eq_one h.z₂_unit
     have hpair := h.row_pair₂
     simp only [h2Tail₂, h2Tail₃] at hz₂ hpair
-    simp [h2Tail₂, h2Tail₃,
-      h.dephased.1, hpair] at hentry
+    simp only [Fin.isValue, h2Tail₃, h.dephased.1, star_one, h2Tail₂,
+      mul_one, hpair, star_neg, RCLike.star_def, neg_mul, Sum.inr.injEq,
+      Fin.reduceEq, ↓reduceIte, smul_eq_mul, mul_zero] at hentry
     rw [hz₂] at hentry
     norm_num at hentry
     simpa [h2CoreB, h2CoreD, Matrix.mul_apply,

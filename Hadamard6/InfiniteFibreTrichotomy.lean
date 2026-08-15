@@ -42,7 +42,7 @@ theorem canonical_infinite_fibre_trichotomy
         rw [hnormEq, ht]
         norm_num
       left
-      exact dependent_zero_T_R_isHadamard3 hX₀ (by simpa [hT, ht]) hR hdet₀
+      exact dependent_zero_T_R_isHadamard3 hX₀ (by simp [hT, ht]) hR hdet₀
     · have htpos : 0 < t := lt_of_le_of_ne ht0 (Ne.symm ht)
       let z : ℂ := G 2 1 / (t : ℂ)
       have htC : (t : ℂ) ≠ 0 := by exact_mod_cast ne_of_gt htpos

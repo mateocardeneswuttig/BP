@@ -116,9 +116,11 @@ theorem nonnegative_real_phase_eq_one {s : ℝ} {r : ℂ}
   have hmul : s * s = 1 := by
     have := hr
     rw [← hsr] at this
-    simpa [Complex.normSq_apply] using this
+    simpa only [Complex.normSq_apply, Complex.ofReal_re,
+      Complex.ofReal_im, mul_zero, sub_zero, add_zero] using this
   have hsone : s = 1 := by nlinarith
-  exact ⟨hsone, by simpa [← hsr, hsone]⟩
+  refine ⟨hsone, ?_⟩
+  simp [← hsr, hsone]
 
 theorem infinite_exceptional_rows_force_sum_one
     {s : ℝ} {Z : Set ℂ} {Rows : Set (ℂ × ℂ × ℂ)}

@@ -181,11 +181,10 @@ theorem karlssonWitness4_resultant_identity
   unfold quadraticResultant karlssonWitness4A karlssonWitness4B karlssonWitness4C
   unfold karlssonHorizontalUnitResultant karlssonMPlus karlssonSharedResidual
   unfold karlssonSharedResidualRow0 karlssonSharedResidualRow1 karlssonSharedResidualRow2 karlssonSharedResidualRow3 karlssonSharedResidualRow4 karlssonSharedResidualRow5 karlssonSharedResidualRow6 karlssonSharedResidualRow7 karlssonSharedResidualRow8 karlssonSharedResidualRow9 karlssonSharedResidualRow10 karlssonSharedResidualRow11 karlssonSharedResidualRow12 karlssonSharedResidualRow13 karlssonSharedResidualRow14 karlssonSharedResidualRow15 karlssonSharedResidualRow16
-  simp [Complex.star_def, hstar]
+  simp [hstar]
   field_simp [hp0]
   ring_nf
-  simp [Complex.I_pow_eq_pow_mod, Complex.I_sq, Complex.I_pow_three,
-    Complex.I_pow_four, hsqrt, hsqrt3, hsqrt4]
+  simp [Complex.I_pow_eq_pow_mod, hsqrt, hsqrt3, hsqrt4]
   ring_nf
   norm_num [Complex.I_sq, Complex.I_pow_three, Complex.I_pow_four,
     hsqrt, hsqrt3, hsqrt4]
@@ -216,11 +215,10 @@ theorem karlssonWitness6_resultant_identity
   unfold quadraticResultant karlssonWitness6A karlssonWitness6B karlssonWitness6C
   unfold karlssonHorizontalUnitResultant karlssonMPlus karlssonSharedResidual
   unfold karlssonSharedResidualRow0 karlssonSharedResidualRow1 karlssonSharedResidualRow2 karlssonSharedResidualRow3 karlssonSharedResidualRow4 karlssonSharedResidualRow5 karlssonSharedResidualRow6 karlssonSharedResidualRow7 karlssonSharedResidualRow8 karlssonSharedResidualRow9 karlssonSharedResidualRow10 karlssonSharedResidualRow11 karlssonSharedResidualRow12 karlssonSharedResidualRow13 karlssonSharedResidualRow14 karlssonSharedResidualRow15 karlssonSharedResidualRow16
-  simp [Complex.star_def, hstar]
+  simp [hstar]
   field_simp [hp0]
   ring_nf
-  simp [Complex.I_pow_eq_pow_mod, Complex.I_sq, Complex.I_pow_three,
-    Complex.I_pow_four, hsqrt, hsqrt3, hsqrt4]
+  simp [Complex.I_pow_eq_pow_mod, hsqrt, hsqrt3, hsqrt4]
   ring_nf
   norm_num [Complex.I_sq, Complex.I_pow_three, Complex.I_pow_four,
     hsqrt, hsqrt3, hsqrt4]
@@ -251,11 +249,10 @@ theorem karlssonWitness8_resultant_identity
   unfold quadraticResultant karlssonWitness8A karlssonWitness8B karlssonWitness8C
   unfold karlssonVerticalUnitResultant karlssonMPlus karlssonSharedResidual
   unfold karlssonSharedResidualRow0 karlssonSharedResidualRow1 karlssonSharedResidualRow2 karlssonSharedResidualRow3 karlssonSharedResidualRow4 karlssonSharedResidualRow5 karlssonSharedResidualRow6 karlssonSharedResidualRow7 karlssonSharedResidualRow8 karlssonSharedResidualRow9 karlssonSharedResidualRow10 karlssonSharedResidualRow11 karlssonSharedResidualRow12 karlssonSharedResidualRow13 karlssonSharedResidualRow14 karlssonSharedResidualRow15 karlssonSharedResidualRow16
-  simp [Complex.star_def, hstar]
+  simp [hstar]
   field_simp [hp0]
   ring_nf
-  simp [Complex.I_pow_eq_pow_mod, Complex.I_sq, Complex.I_pow_three,
-    Complex.I_pow_four, hsqrt, hsqrt3, hsqrt4]
+  simp [Complex.I_pow_eq_pow_mod, hsqrt, hsqrt3, hsqrt4]
   ring_nf
   norm_num [Complex.I_sq, Complex.I_pow_three, Complex.I_pow_four,
     hsqrt, hsqrt3, hsqrt4]
@@ -286,11 +283,10 @@ theorem karlssonWitness10_resultant_identity
   unfold quadraticResultant karlssonWitness10A karlssonWitness10B karlssonWitness10C
   unfold karlssonVerticalUnitResultant karlssonMPlus karlssonSharedResidual
   unfold karlssonSharedResidualRow0 karlssonSharedResidualRow1 karlssonSharedResidualRow2 karlssonSharedResidualRow3 karlssonSharedResidualRow4 karlssonSharedResidualRow5 karlssonSharedResidualRow6 karlssonSharedResidualRow7 karlssonSharedResidualRow8 karlssonSharedResidualRow9 karlssonSharedResidualRow10 karlssonSharedResidualRow11 karlssonSharedResidualRow12 karlssonSharedResidualRow13 karlssonSharedResidualRow14 karlssonSharedResidualRow15 karlssonSharedResidualRow16
-  simp [Complex.star_def, hstar]
+  simp [hstar]
   field_simp [hp0]
   ring_nf
-  simp [Complex.I_pow_eq_pow_mod, Complex.I_sq, Complex.I_pow_three,
-    Complex.I_pow_four, hsqrt, hsqrt3, hsqrt4]
+  simp [Complex.I_pow_eq_pow_mod, hsqrt, hsqrt3, hsqrt4]
   ring_nf
   norm_num [Complex.I_sq, Complex.I_pow_three, Complex.I_pow_four,
     hsqrt, hsqrt3, hsqrt4]

@@ -25,8 +25,8 @@ namespace Hadamard6
 
 variable (IsTao IsKarlsson : Mat6 → Prop)
 
-/-- The three new theorem-level obligations, separated rather than bundled
-into the final classification statement. -/
+/-- The two internal routing obligations, separated rather than bundled into
+the final classification statement. -/
 structure NewProofInputs where
   blockSwap :
     ∀ H, IsHadamard H → ¬ IsKarlsson H →

@@ -27,15 +27,15 @@ theorem kappa_star_on_unit_real
     x ^ 2 * star (kappa (s : ℂ) x) = kappa (s : ℂ) x := by
   have hx0 := ne_zero_of_normSq_eq_one hx
   have hsx := one_div_eq_star_of_normSq_eq_one hx
-  have hstars : star (s : ℂ) = (s : ℂ) := by simp [Complex.star_def]
+  have hstars : star (s : ℂ) = (s : ℂ) := by simp
   have hnorms : Complex.normSq (s : ℂ) = s ^ 2 := by
     simp [Complex.normSq_apply]
     ring
   have hstar2 : star (2 : ℂ) = 2 := by norm_num [Complex.star_def]
   have hstar3 : star (3 : ℂ) = 3 := by norm_num [Complex.star_def]
   have hstarSq : star ((s ^ 2 : ℝ) : ℂ) = ((s ^ 2 : ℝ) : ℂ) := by
-    simp [Complex.star_def]
-  simp only [kappa, star_add, star_sub, star_mul, star_pow, map_ofNat,
+    simp
+  simp only [kappa, star_add, star_sub, star_mul, star_pow,
     hstars, hnorms, hstar2, hstar3, hstarSq]
   rw [← hsx]
   field_simp [hx0]

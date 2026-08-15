@@ -1,4 +1,4 @@
-import Hadamard6.KarlssonBernstein
+import Mathlib.Tactic
 
 /-! Generated exact Bernstein identities for the compact Karlsson residual. -/
 
@@ -2461,8 +2461,7 @@ theorem karlssonResidual_cayley_identity (t rho : ℝ) :
   push_cast
   field_simp [hden]
   ring_nf
-  simp [Complex.I_pow_eq_pow_mod, Complex.I_sq, Complex.I_pow_three,
-    Complex.I_pow_four]
+  simp [Complex.I_pow_eq_pow_mod]
   ring_nf
   norm_num [Complex.I_sq, Complex.I_pow_three, Complex.I_pow_four]
   ring

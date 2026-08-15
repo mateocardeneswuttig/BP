@@ -75,7 +75,7 @@ theorem h2CanonicalPresentation_swap_second_columns
     leading_neg_one := by simpa [L, reindexMatrix] using h.leading_neg_one
     z₁_unit := by simpa [L, reindexMatrix] using h.z₁_unit
     z₂_unit := by
-      simp only [L, reindexMatrix, Equiv.refl_apply,
+      simp only [reindexMatrix, Equiv.refl_apply,
         h2SwapSecondTailPair_tail_two]
       rw [hrow₂]
       simpa using h.z₂_unit
@@ -83,16 +83,16 @@ theorem h2CanonicalPresentation_swap_second_columns
     z₄_unit := by simpa [L, reindexMatrix] using h.z₄_unit
     row_pair₁ := by simpa [L, reindexMatrix] using h.row_pair₁
     row_pair₂ := by
-      simp only [L, reindexMatrix, Equiv.refl_apply,
+      simp only [reindexMatrix, Equiv.refl_apply,
         h2SwapSecondTailPair_tail_two, h2SwapSecondTailPair_tail_three]
       rw [hrow₂]
       ring
     column_pair₁ := by simpa [L, reindexMatrix] using h.column_pair₁
     column_pair₂ := by simpa [L, reindexMatrix] using h.column_pair₂ }
   · intro j
-    simp [L, reindexMatrix, h.dephased.1]
+    simp [reindexMatrix, h.dephased.1]
   · intro i
-    simp [L, reindexMatrix, h.dephased.2]
+    simp [reindexMatrix, h.dephased.2]
 
 /-- Swapping the second row pair preserves a canonical presentation. -/
 theorem h2CanonicalPresentation_swap_second_rows
@@ -130,21 +130,21 @@ theorem h2CanonicalPresentation_swap_negative_columns
     z₃_unit := by simpa [L, reindexMatrix] using h.z₃_unit
     z₄_unit := by simpa [L, reindexMatrix] using h.z₄_unit
     row_pair₁ := by
-      simp only [L, reindexMatrix, Equiv.refl_apply,
+      simp only [reindexMatrix, Equiv.refl_apply,
         h2SwapNegativeTails_tail_zero, h2SwapNegativeTails_tail_one]
       rw [hneg]
       exact h.row_pair₁
     row_pair₂ := by
-      simp only [L, reindexMatrix, Equiv.refl_apply,
+      simp only [reindexMatrix, Equiv.refl_apply,
         h2SwapNegativeTails_tail_two, h2SwapNegativeTails_tail_three]
       rw [← hneg]
       exact h.row_pair₂
     column_pair₁ := by simpa [L, reindexMatrix] using h.column_pair₁
     column_pair₂ := by simpa [L, reindexMatrix] using h.column_pair₂ }
   · intro j
-    simp [L, reindexMatrix, h.dephased.1]
+    simp [reindexMatrix, h.dephased.1]
   · intro i
-    simp [L, reindexMatrix, h.dephased.2]
+    simp [reindexMatrix, h.dephased.2]
 
 /-- Row analogue of `h2CanonicalPresentation_swap_negative_columns`. -/
 theorem h2CanonicalPresentation_swap_negative_rows
@@ -184,7 +184,7 @@ theorem isHadamard2_of_entrywiseUnit_of_row_cross
   fin_cases i <;> fin_cases j
   · simp only [Matrix.mul_apply, Matrix.conjTranspose_apply,
       Fin.sum_univ_two, Matrix.smul_apply, Matrix.one_apply, if_pos,
-      smul_eq_mul, mul_one, starRingEnd_apply]
+      smul_eq_mul, mul_one]
     change X 0 0 * star (X 0 0) + X 0 1 * star (X 0 1) = 2
     rw [h00, h01]
     norm_num
@@ -194,7 +194,7 @@ theorem isHadamard2_of_entrywiseUnit_of_row_cross
       Fin.sum_univ_two, add_comm, mul_comm] using hcrossStar
   · simp only [Matrix.mul_apply, Matrix.conjTranspose_apply,
       Fin.sum_univ_two, Matrix.smul_apply, Matrix.one_apply, if_pos,
-      smul_eq_mul, mul_one, starRingEnd_apply]
+      smul_eq_mul, mul_one]
     change X 1 0 * star (X 1 0) + X 1 1 * star (X 1 1) = 2
     rw [h10, h11]
     norm_num
@@ -489,7 +489,7 @@ theorem h2BlockNormalized_equiv_of_equal_phases
             by linear_combination hcdSum
           rw [habEq, hbd] at hnorm
           simp only [sub_self, zero_mul, star_zero, zero_add, sub_neg_eq_add,
-            star_add, star_neg] at hnorm
+            star_add] at hnorm
           have hfalse : (0 : ℂ) = 2 := by
             linear_combination hnorm - 4 * hcUnit
           norm_num at hfalse
@@ -500,7 +500,7 @@ theorem h2BlockNormalized_equiv_of_equal_phases
             by linear_combination habSum
           rw [hba, hcd] at hnorm
           simp only [sub_self, mul_zero, star_zero, add_zero, sub_neg_eq_add,
-            star_add, star_neg] at hnorm
+            star_add] at hnorm
           have hfalse : (0 : ℂ) = 2 := by
             linear_combination hnorm - 4 * haUnit
           norm_num at hfalse

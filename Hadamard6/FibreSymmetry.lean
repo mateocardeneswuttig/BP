@@ -126,8 +126,8 @@ theorem phaseNoninitialRows_isHadamard3_iff {u v : ℂ} {X : Mat3}
   · intro h
     let u' := (starRingEnd ℂ) u
     let v' := (starRingEnd ℂ) v
-    have hu' : Complex.normSq u' = 1 := by simpa [u', hu]
-    have hv' : Complex.normSq v' = 1 := by simpa [v', hv]
+    have hu' : Complex.normSq u' = 1 := by simp [u', hu]
+    have hv' : Complex.normSq v' = 1 := by simp [v', hv]
     have hback : phaseNoninitialRows u' v'
         (phaseNoninitialRows u v X) = X := by
       ext i j
@@ -138,15 +138,13 @@ theorem phaseNoninitialRows_isHadamard3_iff {u v : ℂ} {X : Mat3}
     rw [phaseNoninitialRows_rowGram, h.2]
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [phaseRowGram, u', v', hsu_mul, hsv_mul,
-        hu_mul_star, hv_mul_star, hstar_u_mul, hstar_v_mul]
+      simp [phaseRowGram, u', v', hstar_u_mul, hstar_v_mul]
   · intro h
     refine ⟨phaseNoninitialRows_entrywiseUnit hu hv h.1, ?_⟩
     rw [phaseNoninitialRows_rowGram, h.2]
     ext i j
     fin_cases i <;> fin_cases j <;>
-      simp [phaseRowGram, hsu_mul, hsv_mul,
-        hu_mul_star, hv_mul_star, hstar_u_mul, hstar_v_mul]
+      simp [phaseRowGram, hu_mul_star, hv_mul_star]
 
 theorem rowTau_phaseNoninitialRows {u v : ℂ} {X : Mat3}
     (hu : Complex.normSq u = 1) (hv : Complex.normSq v = 1) :

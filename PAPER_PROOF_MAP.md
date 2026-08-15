@@ -37,6 +37,14 @@ invent a cleaner reference.
 | Karlsson affine-Fourier seam | `KarlssonFourierSeam.lean`, `FourierSeamCertificate.lean` |
 | Public recombination | `PaperTheorem.lean` |
 
+The two generated arithmetic modules are deliberately terminal backends, not
+alternative theorem spines. `KarlssonResidualCertificate.lean` certifies the
+compact residual by exact Bernstein identities, while
+`KarlssonWitnessResultants.lean` certifies four explicit reciprocal
+resultants. Their mathematical routing is visible in the much shorter
+consumer modules; their size records exact coefficients, not additional
+assumptions or classification cases.
+
 No Lean predicate named after (G_6^{(4)}) denotes the total atlas.  The
 formal vocabulary uses `InFiniteCornerAtlas` throughout.  The paper's
 separate construction-level identification with the nonexceptional output of Construction 3.1 is not

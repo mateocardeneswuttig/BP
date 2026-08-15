@@ -21,39 +21,51 @@ theorem karlssonCompactResidual_pos_on_unitSquare
           let t : Set.Icc (0 : ℝ) 1 :=
             ⟨4 * (y : ℝ), by constructor <;> nlinarith [y.2.1]⟩
           have h := karlssonLeaf0000_residual_pos s t
-          convert h using 1 <;> dsimp [s, t] <;> ring
+          convert h using 1
+          all_goals dsimp [s, t]
+          all_goals ring
         · let s : Set.Icc (0 : ℝ) 1 :=
             ⟨4 * (x : ℝ), by constructor <;> nlinarith [x.2.1]⟩
           let t : Set.Icc (0 : ℝ) 1 :=
             ⟨4 * (y : ℝ) - 1, by constructor <;> nlinarith [y.2.2]⟩
           have h := karlssonLeaf0001_residual_pos s t
-          convert h using 1 <;> dsimp [s, t] <;> ring
+          convert h using 1
+          all_goals dsimp [s, t]
+          all_goals ring
       · by_cases hyQuarter : (y : ℝ) ≤ 1 / 4
         · let s : Set.Icc (0 : ℝ) 1 :=
             ⟨4 * (x : ℝ) - 1, by constructor <;> nlinarith [x.2.2]⟩
           let t : Set.Icc (0 : ℝ) 1 :=
             ⟨4 * (y : ℝ), by constructor <;> nlinarith [y.2.1]⟩
           have h := karlssonLeaf0010_residual_pos s t
-          convert h using 1 <;> dsimp [s, t] <;> ring
+          convert h using 1
+          all_goals dsimp [s, t]
+          all_goals ring
         · let s : Set.Icc (0 : ℝ) 1 :=
             ⟨4 * (x : ℝ) - 1, by constructor <;> nlinarith [x.2.2]⟩
           let t : Set.Icc (0 : ℝ) 1 :=
             ⟨4 * (y : ℝ) - 1, by constructor <;> nlinarith [y.2.2]⟩
           have h := karlssonLeaf0011_residual_pos s t
-          convert h using 1 <;> dsimp [s, t] <;> ring
+          convert h using 1
+          all_goals dsimp [s, t]
+          all_goals ring
     · let s : Set.Icc (0 : ℝ) 1 :=
         ⟨2 * (x : ℝ), by constructor <;> nlinarith [x.2.1]⟩
       let t : Set.Icc (0 : ℝ) 1 :=
         ⟨2 * (y : ℝ) - 1, by constructor <;> nlinarith [y.2.2]⟩
       have h := karlssonLeaf01_residual_pos s t
-      convert h using 1 <;> dsimp [s, t] <;> ring
+      convert h using 1
+      all_goals dsimp [s, t]
+      all_goals ring
   · by_cases hyHalf : (y : ℝ) ≤ 1 / 2
     · let s : Set.Icc (0 : ℝ) 1 :=
         ⟨2 * (x : ℝ) - 1, by constructor <;> nlinarith [x.2.2]⟩
       let t : Set.Icc (0 : ℝ) 1 :=
         ⟨2 * (y : ℝ), by constructor <;> nlinarith [y.2.1]⟩
       have h := karlssonLeaf10_residual_pos s t
-      convert h using 1 <;> dsimp [s, t] <;> ring
+      convert h using 1
+      all_goals dsimp [s, t]
+      all_goals ring
     · by_cases hxThreeQuarter : (x : ℝ) ≤ 3 / 4
       · by_cases hyThreeQuarter : (y : ℝ) ≤ 3 / 4
         · let s : Set.Icc (0 : ℝ) 1 :=
@@ -61,26 +73,34 @@ theorem karlssonCompactResidual_pos_on_unitSquare
           let t : Set.Icc (0 : ℝ) 1 :=
             ⟨4 * (y : ℝ) - 2, by constructor <;> nlinarith [y.2.2]⟩
           have h := karlssonLeaf1100_residual_pos s t
-          convert h using 1 <;> dsimp [s, t] <;> ring
+          convert h using 1
+          all_goals dsimp [s, t]
+          all_goals ring
         · let s : Set.Icc (0 : ℝ) 1 :=
             ⟨4 * (x : ℝ) - 2, by constructor <;> nlinarith [x.2.2]⟩
           let t : Set.Icc (0 : ℝ) 1 :=
             ⟨4 * (y : ℝ) - 3, by constructor <;> nlinarith [y.2.2]⟩
           have h := karlssonLeaf1101_residual_pos s t
-          convert h using 1 <;> dsimp [s, t] <;> ring
+          convert h using 1
+          all_goals dsimp [s, t]
+          all_goals ring
       · by_cases hyThreeQuarter : (y : ℝ) ≤ 3 / 4
         · let s : Set.Icc (0 : ℝ) 1 :=
             ⟨4 * (x : ℝ) - 3, by constructor <;> nlinarith [x.2.2]⟩
           let t : Set.Icc (0 : ℝ) 1 :=
             ⟨4 * (y : ℝ) - 2, by constructor <;> nlinarith [y.2.2]⟩
           have h := karlssonLeaf1110_residual_pos s t
-          convert h using 1 <;> dsimp [s, t] <;> ring
+          convert h using 1
+          all_goals dsimp [s, t]
+          all_goals ring
         · let s : Set.Icc (0 : ℝ) 1 :=
             ⟨4 * (x : ℝ) - 3, by constructor <;> nlinarith [x.2.2]⟩
           let t : Set.Icc (0 : ℝ) 1 :=
             ⟨4 * (y : ℝ) - 3, by constructor <;> nlinarith [y.2.2]⟩
           have h := karlssonLeaf1111_residual_pos s t
-          convert h using 1 <;> dsimp [s, t] <;> ring
+          convert h using 1
+          all_goals dsimp [s, t]
+          all_goals ring
 
 /-- The original real residual is strictly positive on the full nonnegative
 quadrant. -/

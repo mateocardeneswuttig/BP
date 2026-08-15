@@ -38,7 +38,7 @@ theorem rowFibreEndpoint0_phaseRowGram
   have hus : u * star u = 1 := by simpa [mul_comm] using hsu
   have hvs : v * star v = 1 := by simpa [mul_comm] using hsv
   simp only [rowFibreEndpoint0, phaseRowGram, rowPhaseFactor_zero,
-    rowPhaseFactor_one, rowPhaseFactor_two, star_mul, star_star,
+    rowPhaseFactor_one, rowPhaseFactor_two, star_mul,
     star_one, mul_one]
   linear_combination
     (star u ^ 2 * v *
@@ -74,7 +74,7 @@ theorem rowFibreEndpoint0_eq_neg_star_specializedBeta0
   simp only [rowFibreEndpoint0, specializedBeta0, eliminantBeta0,
     hS, hT, star_neg, star_add, star_sub, star_mul, star_pow,
     star_star]
-  simp [Complex.star_def]
+  simp
   ring
 
 theorem rowFibreEndpoint3_eq_neg_specializedBeta3
@@ -84,7 +84,7 @@ theorem rowFibreEndpoint3_eq_neg_specializedBeta3
       -specializedBeta3 s (t : ℂ) (G 2 1) := by
   simp only [rowFibreEndpoint3, specializedBeta3, eliminantBeta3,
     hS, hT]
-  simp [Complex.star_def]
+  simp
   ring
 
 private theorem second_rows_not_infinite_of_endpoints
@@ -163,7 +163,7 @@ theorem rowEndpoint0_eq_fibreData (X : Mat3)
         3 * R * star S + star S ^ 2 * T := by
   simp only [rowEndpoint0, rowFibreEndpoint0, Matrix.mul_apply,
     Matrix.conjTranspose_apply, Fin.sum_univ_three, fibreS, fibreT,
-    fibreR, hfirst, star_one, one_mul, mul_one]
+    fibreR, hfirst, star_one, mul_one]
   ring
 
 theorem rowEndpoint3_eq_fibreData (X : Mat3)
@@ -177,7 +177,7 @@ theorem rowEndpoint3_eq_fibreData (X : Mat3)
         star R * star S ^ 2 - 3 * star S * star T := by
   simp only [rowEndpoint3, rowFibreEndpoint3, Matrix.mul_apply,
     Matrix.conjTranspose_apply, Fin.sum_univ_three, fibreS, fibreT,
-    fibreR, hfirst, star_one, one_mul, mul_one]
+    fibreR, hfirst, star_one, mul_one]
   ring
 
 theorem normalizedRowGramFibre_finite_of_matrix_endpoints

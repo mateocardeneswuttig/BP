@@ -135,8 +135,14 @@ theorem karlssonZLeft_mul_conjTranspose
     simpa [mul_comm] using star_mul_self_of_normSq_one hz
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [karlssonZLeft, Matrix.mul_apply,
-      Matrix.conjTranspose_apply, Fin.sum_univ_two]
+    simp only [karlssonZLeft, Fin.zero_eta, Fin.mk_one, Fin.isValue,
+      Matrix.mul_apply, Matrix.of_apply, Matrix.cons_val',
+      Matrix.cons_val_fin_one, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.conjTranspose_apply, RCLike.star_def, Fin.sum_univ_two,
+      map_one, map_neg, mul_one, mul_neg, neg_mul, neg_neg,
+      Matrix.smul_apply, Matrix.one_apply_eq, Matrix.one_apply_ne,
+      smul_eq_mul, Nat.reduceAdd, ne_eq, zero_ne_one, one_ne_zero,
+      not_false_eq_true, mul_zero]
   all_goals rw [hunit]; norm_num
 
 theorem karlssonZRight_conjTranspose_mul
@@ -243,9 +249,15 @@ theorem karlssonBlockProduct_row_real_constraint
         karlssonBlockProduct zLeft M zRight 1 1 *
           star (karlssonBlockProduct zLeft M zRight 1 1) = 0 := by
     linear_combination h00 + h01 - h10 - h11
-  simp [karlssonBlockProduct, karlssonZLeft, karlssonZRight,
-    Matrix.mul_apply, Matrix.vecMul, dotProduct,
-    Fin.sum_univ_two] at hsum
+  simp only [karlssonBlockProduct, one_div, karlssonZLeft, Matrix.cons_mul,
+    Nat.succ_eq_add_one, Nat.reduceAdd, Matrix.empty_mul,
+    Equiv.symm_apply_apply, karlssonZRight, Matrix.vecMul_vecMul,
+    Fin.isValue, Matrix.smul_apply, Matrix.of_apply, Matrix.cons_val',
+    Matrix.vecMul, dotProduct, Matrix.mul_apply, Matrix.cons_val_zero,
+    Matrix.cons_val_fin_one, Fin.sum_univ_two, mul_one,
+    Matrix.cons_val_one, one_mul, neg_mul, smul_eq_mul, star_mul',
+    star_inv₀, star_ofNat, star_add, RCLike.star_def, mul_neg,
+    star_neg] at hsum
   simp only [starRingEnd_apply] at hsum
   have hc : zLeft * (M 1 0 * star (M 0 0) +
       M 1 1 * star (M 0 1)) +
@@ -315,9 +327,15 @@ theorem karlssonBlockProduct_diagonal_real_constraint
         karlssonBlockProduct zLeft M zRight 1 1 *
           star (karlssonBlockProduct zLeft M zRight 1 1) = 0 := by
     linear_combination h00 - h01 - h10 + h11
-  simp [karlssonBlockProduct, karlssonZLeft, karlssonZRight,
-    Matrix.mul_apply, Matrix.vecMul, dotProduct,
-    Fin.sum_univ_two] at hsum
+  simp only [karlssonBlockProduct, one_div, karlssonZLeft, Matrix.cons_mul,
+    Nat.succ_eq_add_one, Nat.reduceAdd, Matrix.empty_mul,
+    Equiv.symm_apply_apply, karlssonZRight, Matrix.vecMul_vecMul,
+    Fin.isValue, Matrix.smul_apply, Matrix.of_apply, Matrix.cons_val',
+    Matrix.vecMul, dotProduct, Matrix.mul_apply, Matrix.cons_val_zero,
+    Matrix.cons_val_fin_one, Fin.sum_univ_two, mul_one,
+    Matrix.cons_val_one, one_mul, neg_mul, smul_eq_mul, star_mul',
+    star_inv₀, star_ofNat, star_add, RCLike.star_def, mul_neg,
+    star_neg] at hsum
   simp only [starRingEnd_apply] at hsum
   have hw :
       (zLeft * zRight * M 1 1 * star (M 0 0) +
@@ -347,8 +365,8 @@ theorem karlssonBlockProduct_diagonal_real_constraint
 theorem add_star_eq_zero_of_re_eq_zero {w : ℂ} (h : w.re = 0) :
     w + star w = 0 := by
   apply Complex.ext
-  · simpa [Complex.star_def, h]
-  · simp [Complex.star_def]
+  · simp [h]
+  · simp
 
 /-- The two order-two Fourier factors preserve the Frobenius norm on unit
 phases.  Thus four unit entries in a transformed block give Karlsson's
@@ -738,13 +756,15 @@ theorem h2ParameterA_diagonal_eq_zero_of_right_nondegenerate
   have h₁ : (h2Z₁ K * w).re = 0 := by
     dsimp [w]
     simp only [starRingEnd_apply]
-    convert h₁raw using 1 <;> ring
+    convert h₁raw using 1
+    all_goals ring
   have h₂ : (h2Z₂ K * w).re = 0 := by
     rcases hleft with heq | heq
     · rw [heq] at h₂raw
       dsimp [w]
       simp only [starRingEnd_apply]
-      convert h₂raw using 1 <;> ring
+      convert h₂raw using 1
+      all_goals ring
     · rw [heq] at h₂raw
       simp only [star_neg] at h₂raw
       have hexpr :
@@ -783,13 +803,15 @@ theorem h2ParameterB_diagonal_eq_zero_of_right_nondegenerate
   have h₂ : (h2Z₂ K * w).re = 0 := by
     dsimp [w]
     simp only [starRingEnd_apply]
-    convert h₂raw using 1 <;> ring
+    convert h₂raw using 1
+    all_goals ring
   have h₁ : (h2Z₁ K * w).re = 0 := by
     rcases hleft with heq | heq
     · rw [heq] at h₁raw
       dsimp [w]
       simp only [starRingEnd_apply]
-      convert h₁raw using 1 <;> ring
+      convert h₁raw using 1
+      all_goals ring
     · rw [heq] at h₁raw
       simp only [star_neg] at h₁raw
       have hexpr :
@@ -822,11 +844,14 @@ theorem first_core_rowGram_of_karlsson_relations
     (hXcol : X 0 1 * star (X 0 0) + X 1 1 * star (X 1 0) = 0)
     (hYrow : Y 1 0 * star (Y 0 0) + Y 1 1 * star (Y 0 1) = 0) :
     X * Matrix.conjTranspose X = (2 : ℂ) • (1 : Mat2) := by
-  have h00 := congrArg (fun M : Mat2 ↦ M 0 0) hsum
-  have h01 := congrArg (fun M : Mat2 ↦ M 0 1) hsum
-  have h10 := congrArg (fun M : Mat2 ↦ M 1 0) hsum
-  have h11 := congrArg (fun M : Mat2 ↦ M 1 1) hsum
-  simp [karlssonF2] at h00 h01 h10 h11
+  have h00 : X 0 0 + Y 0 0 = -1 := by
+    simpa [karlssonF2] using congrArg (fun M : Mat2 ↦ M 0 0) hsum
+  have h01 : X 0 1 + Y 0 1 = -1 := by
+    simpa [karlssonF2] using congrArg (fun M : Mat2 ↦ M 0 1) hsum
+  have h10 : X 1 0 + Y 1 0 = -1 := by
+    simpa [karlssonF2] using congrArg (fun M : Mat2 ↦ M 1 0) hsum
+  have h11 : X 1 1 + Y 1 1 = 1 := by
+    simpa [karlssonF2] using congrArg (fun M : Mat2 ↦ M 1 1) hsum
   have hXrowStar := congrArg star hXrow
   have hXcolStar := congrArg star hXcol
   have hYrowStar := congrArg star hYrow
@@ -886,11 +911,14 @@ theorem first_core_rowGram_of_one_degenerate_relations
         star (z * (X 1 0 * star (X 0 0) +
           X 1 1 * star (X 0 1))) = 0) :
     X * Matrix.conjTranspose X = (2 : ℂ) • (1 : Mat2) := by
-  have h00 := congrArg (fun M : Mat2 ↦ M 0 0) hsum
-  have h01 := congrArg (fun M : Mat2 ↦ M 0 1) hsum
-  have h10 := congrArg (fun M : Mat2 ↦ M 1 0) hsum
-  have h11 := congrArg (fun M : Mat2 ↦ M 1 1) hsum
-  simp [karlssonF2] at h00 h01 h10 h11
+  have h00 : X 0 0 + Y 0 0 = -1 := by
+    simpa [karlssonF2] using congrArg (fun M : Mat2 ↦ M 0 0) hsum
+  have h01 : X 0 1 + Y 0 1 = -1 := by
+    simpa [karlssonF2] using congrArg (fun M : Mat2 ↦ M 0 1) hsum
+  have h10 : X 1 0 + Y 1 0 = -1 := by
+    simpa [karlssonF2] using congrArg (fun M : Mat2 ↦ M 1 0) hsum
+  have h11 : X 1 1 + Y 1 1 = 1 := by
+    simpa [karlssonF2] using congrArg (fun M : Mat2 ↦ M 1 1) hsum
   have hY00 : Y 0 0 = -1 - X 0 0 := by linear_combination h00
   have hY01 : Y 0 1 = -1 - X 0 1 := by linear_combination h01
   have hY10 : Y 1 0 = -1 - X 1 0 := by linear_combination h10
@@ -956,7 +984,7 @@ theorem first_core_rowGram_of_one_degenerate_relations
             linear_combination -hrelation
           have ha : X 0 0 = -1 := by
             apply star_injective
-            simpa [hsa]
+            simp [hsa]
           rw [ha, hd0] at hnorm2
           norm_num at hnorm2
         · have ha0 : X 0 0 = 0 := star_eq_zero.mp hsa0
@@ -996,7 +1024,7 @@ theorem first_core_rowGram_of_one_degenerate_relations
   · have hb : X 0 1 = star (X 1 0) := sub_eq_zero.mp hconjugate
     have hc : X 1 0 = star (X 0 1) := by
       apply star_injective
-      simpa [hb]
+      simp [hb]
     have hd : X 1 1 = -star (X 0 0) := by
       rw [hb] at h24
       linear_combination h24

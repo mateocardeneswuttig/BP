@@ -104,32 +104,6 @@ theorem dependentPi_sub_Theta (s t : ℝ) (z : ℂ) :
   simp only [dependentPi, dependentTheta]
   ring
 
-theorem dependent_factor_alternative
-    {s t : ℝ} {z : ℂ} (hz : Complex.normSq z = 1) (ht : t ≠ 0)
-    (h₀ : specializedBeta0 s (t : ℂ) ((t : ℂ) * z) = 0)
-    (h₃ : specializedBeta3 s (t : ℂ) ((t : ℂ) * z) = 0) :
-    s ^ 2 = t ^ 2 ∨ z ^ 2 = 1 := by
-  have htC : (t : ℂ) ≠ 0 := by exact_mod_cast ht
-  have hz0 := ne_zero_of_normSq_eq_one hz
-  rw [dependent_beta0_formula hz] at h₀
-  rw [dependent_beta3_formula hz] at h₃
-  have hPi : dependentPi s t z = 0 := by
-    field_simp [hz0] at h₀
-    have h₀' : -(t : ℂ) * dependentPi s t z = 0 := by simpa using h₀
-    exact (mul_eq_zero.mp h₀').resolve_left (neg_ne_zero.mpr htC)
-  have hTheta : dependentTheta s t z = 0 := by
-    field_simp [hz0] at h₃
-    have h₃' : (t : ℂ) * dependentTheta s t z = 0 := by simpa using h₃
-    exact (mul_eq_zero.mp h₃').resolve_left htC
-  have hfactor :
-      ((s : ℂ) ^ 2 - (t : ℂ) ^ 2) * (z ^ 2 - 1) = 0 := by
-    rw [← dependentPi_sub_Theta, hPi, hTheta]
-    simp
-  rcases mul_eq_zero.mp hfactor with hst | hzsq
-  · left
-    exact_mod_cast sub_eq_zero.mp hst
-  · exact Or.inr (sub_eq_zero.mp hzsq)
-
 theorem dependent_z_one_forces_s_t_three
     {s t : ℝ} (hs0 : 0 ≤ s) (hs3 : s ≤ 3)
     (ht0 : 0 < t) (ht3 : t ≤ 3)
@@ -229,7 +203,10 @@ theorem dependent_equal_real_critical
     rfl
   rw [hcast2, hcast3] at hrel
   have hzsum : z + star z = ((2 * z.re : ℝ) : ℂ) := by
-    apply Complex.ext <;> simp [Complex.star_def] <;> ring
+    apply Complex.ext
+    · simp
+      ring
+    · simp
   rw [hzsum] at hrel
   have hre : s ^ 2 * (2 * z.re) = s ^ 3 - 3 * s := by
     exact_mod_cast hrel
@@ -261,13 +238,13 @@ theorem dependent_equal_tau_formula
     ring
   rw [hcoef]
   have hre : (((s ^ 3 : ℝ) : ℂ) * star z).re = s ^ 3 * z.re := by
-    simp [Complex.star_def]
-    have hs3re : ((s : ℂ) ^ 3).re = s ^ 3 := by
+    rw [Complex.mul_re]
+    have hs3re : (((s ^ 3 : ℝ) : ℂ)).re = s ^ 3 := by
       simp [pow_succ, Complex.mul_re]
-    have hs3im : ((s : ℂ) ^ 3).im = 0 := by
+    have hs3im : (((s ^ 3 : ℝ) : ℂ)).im = 0 := by
       simp [pow_succ, Complex.mul_im]
     rw [hs3re, hs3im]
-    ring
+    simp
   rw [hre]
   nlinarith
 

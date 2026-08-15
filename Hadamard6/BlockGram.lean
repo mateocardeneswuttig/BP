@@ -134,7 +134,8 @@ theorem allFourBlocksHadamard_of_topRight
   have hsubtract :
       sixI3 - (3 : ℂ) • (1 : Mat3) = (3 : ℂ) • (1 : Mat3) := by
     ext i j
-    by_cases h : i = j <;> simp [sixI3, h] <;> norm_num
+    by_cases h : i = j <;> simp [sixI3, h]
+    all_goals norm_num
   have hEgram : E * Matrix.conjTranspose E = (3 : ℂ) • (1 : Mat3) := by
     rw [hB.2] at hrowTop
     exact (eq_sub_of_add_eq hrowTop).trans hsubtract
@@ -167,7 +168,8 @@ theorem allFourBlocksHadamard_of_topLeft
   have hsubtract :
       sixI3 - (3 : ℂ) • (1 : Mat3) = (3 : ℂ) • (1 : Mat3) := by
     ext i j
-    by_cases h : i = j <;> simp [sixI3, h] <;> norm_num
+    by_cases h : i = j <;> simp [sixI3, h]
+    all_goals norm_num
   have hBgram : B * Matrix.conjTranspose B = (3 : ℂ) • (1 : Mat3) := by
     have hbsub : B * Matrix.conjTranspose B =
         sixI3 - E * Matrix.conjTranspose E := by
@@ -205,7 +207,8 @@ theorem allFourBlocksHadamard_of_bottomRight
   have hsubtract :
       sixI3 - (3 : ℂ) • (1 : Mat3) = (3 : ℂ) • (1 : Mat3) := by
     ext i j
-    by_cases h : i = j <;> simp [sixI3, h] <;> norm_num
+    by_cases h : i = j <;> simp [sixI3, h]
+    all_goals norm_num
   have hDcol := hadamard3_column_gram hD
   have hBcol : Matrix.conjTranspose B * B = (3 : ℂ) • (1 : Mat3) := by
     rw [hDcol] at hcolRight
@@ -225,7 +228,8 @@ theorem allFourBlocksHadamard_of_bottomLeft
   have hsubtract :
       sixI3 - (3 : ℂ) • (1 : Mat3) = (3 : ℂ) • (1 : Mat3) := by
     ext i j
-    by_cases h : i = j <;> simp [sixI3, h] <;> norm_num
+    by_cases h : i = j <;> simp [sixI3, h]
+    all_goals norm_num
   have hEcol : Matrix.conjTranspose E * E =
       (3 : ℂ) • (1 : Mat3) := by
     rw [hCcol] at hcolLeft
