@@ -11,13 +11,24 @@ permissions:
   pages: write # Write access to GitHub Pages
   id-token: write # Write access to ID tokens
 
+# A full build takes tens of minutes, so do not let pushes stack up.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v5
+      # The generated certificate modules each peak at several GiB of
+      # elaboration memory. Concurrent Lean workers exhaust the runner, which
+      # is then torn down and reported as a cancelled job with exit code 143
+      # rather than as a build failure. Build one module at a time.
       - uses: leanprover/lean-action@v1
+        with:
+          build-args: "-j1"
       - name: Audit paper-facing theorem boundary
         run: python3 audit_public_theorem.py
       - uses: leanprover-community/docgen-action@v1
