@@ -20,11 +20,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    # The generated certificate modules each need several GiB to elaborate.
+    # Building them concurrently exhausts the runner, which is then torn down
+    # and reported as a cancelled job with exit code 143 rather than as a
+    # build failure. Lake has no `--jobs` option, but it schedules builds on
+    # Lean's thread pool, so this serialises them and caps peak memory at one
+    # module. Slower, but it fits.
+    env:
+      LEAN_NUM_THREADS: 1
+
     steps:
       - uses: actions/checkout@v5
-      # The generated certificate modules are memory-heavy. If this job is
-      # reported as cancelled with exit code 143, the runner ran out of
-      # memory; it is not a timeout.
       - uses: leanprover/lean-action@v1
       - name: Audit paper-facing theorem boundary
         run: python3 audit_public_theorem.py
