@@ -21,6 +21,79 @@ In particular, non-Tao, non-Karlsson recovery by our completed output needs only
 first input.  The paper's additional comparison with the complete finite
 nonexceptional Construction 3.1 output (G_6^{(4)}) is outside this Lean audit.
 
+## The seam assumption in detail
+
+`PublishedCubicRootCriterion` can be compared directly against its source: it
+is the manuscript's Proposition 7(2), and a reader can hold the two statements
+side by side.  `IntrinsicKarlssonSeamIdentification` cannot be read that way.
+It is stated in terms of two structures this development derives itself, so a
+reader must first accept that those structures capture the degenerate cases of
+the published parametrization.  This section records that correspondence
+explicitly, because it is the one link in the audit chain that is otherwise
+left to the reader's trust in the development's own bookkeeping.
+
+Both clauses conclude `IsAffineFourierSeam H`, which is concrete: `H` is
+equivalent to `affineFourierMatrix omega z₁ z₂` or to its transpose, where
+`affineFourierMatrix` is a displayed matrix literal and its Hadamard property
+is proved, not assumed.
+
+### Clause 1: the common Fourier point
+
+`IntrinsicKarlssonCommonFourierPresentation H` (`H2KarlssonParametrization.lean`)
+carries four unimodular phases and the single equation
+
+```text
+Equivalent H (karlssonRawMatrix 1 1 z₁ z₂ z₃ z₄).
+```
+
+That is the raw Karlsson chart evaluated at the one parameter point
+`(t, p) = (1, 1)`.  The regular chart excludes exactly this point, via the
+field `not_common_fourier : ¬ (t = 1 ∧ p = 1)` of
+`CanonicalKarlssonRawPresentation`.  It corresponds to the locus in the
+manuscript's Proposition 15 where the phase-determining formulas of the
+parametrization degenerate simultaneously.
+
+Independent corroboration exists for this clause.  Numerically, the
+unimodularity locus of `karlssonRawMatrix` is one-dimensional at generic
+`(t, p)` — giving three continuous parameters in total, matching Karlsson's
+three-real-parameter family — and jumps to two dimensions exactly at
+`(t, p) = (1, 1)`, matching the two free phases of `affineFourierMatrix`.
+Haagerup invariants of the two families agree there to grid resolution.  The
+dimension count is therefore consistent on both sides of the identification.
+
+### Clause 2: the four exceptional cores
+
+`H2ExceptionalCorePresentation H` carries a normalized representative `K` and
+the requirement that
+
+```text
+h2KarlssonLambda (h2ParameterA K) ∈ {1, -1, karlssonSign2, -karlssonSign2}
+```
+
+where `karlssonSign2` is `diag (1, -1)`.  These are the two scalar Hermitian
+involutions and the two diagonal traceless involutions — the cases in which
+the Möbius coordinates used by the regular chart are undefined.  Unfolding
+`h2KarlssonLambda`, each of the four pins the `2 x 2` parameter block
+`h2ParameterA K` to a cube-root dressing of the Fourier matrix `F₂`, which is
+why the manuscript expects them to land in the affine-Fourier seam or its
+transpose.
+
+**This clause has not been independently checked.**  It rests on the
+degenerate-case analysis of the published parametrization cited in
+Proposition 7(1).  Unlike clause 1 it has no numerical corroboration recorded
+here, and unlike `PublishedCubicRootCriterion` it has no formalization
+roadmap.  A reader assessing the trust boundary should treat it as the least
+scrutinized input of the development.
+
+### Outstanding
+
+Pinpoint citations are not yet supplied.  Proposition 7(1) of the manuscript
+cites its sources for the parametrization as a whole, but neither the common
+Fourier point nor the four exceptional cores is matched to a specific
+statement in those sources.  Adding those two pointers would let a referee
+check the seam assumption the same way the cubic criterion can already be
+checked, and is the single cheapest improvement available to this document.
+
 ## Proves internally
 
 - Hadamard equivalence and invariance of every concrete public predicate;
