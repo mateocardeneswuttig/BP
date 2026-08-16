@@ -22,11 +22,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
-      # The generated certificate modules each peak at several GiB of
-      # elaboration memory. Concurrent Lean workers exhaust the runner, which
-      # is then torn down and reported as a cancelled job with exit code 143
-      # rather than as a build failure. Lake 5 has no `-j`/`--jobs` option, so
-      # parallelism cannot be capped from the command line.
+      # The generated certificate modules are memory-heavy. If this job is
+      # reported as cancelled with exit code 143, the runner ran out of
+      # memory; it is not a timeout.
       - uses: leanprover/lean-action@v1
       - name: Audit paper-facing theorem boundary
         run: python3 audit_public_theorem.py
