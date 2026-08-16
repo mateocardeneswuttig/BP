@@ -1,8 +1,6 @@
 # Formalizing the published cubic-root criterion
 
-## Exact remaining statement
-
-The public theorem assumes the following paper-facing intrinsic proposition:
+## The assumption to be discharged
 
 ```text
 PublishedCubicRootCriterion :=
@@ -11,120 +9,237 @@ PublishedCubicRootCriterion :=
       IsTaoOrbit K ∨ IsKarlssonConcrete K
 ```
 
-`HasNoninitialCubicRootRowAndColumn` already includes dephasing. The
-invariant statement for an equivalent representative is derived internally,
-so equivalence transport is not part of the literature input.
-
-Here `IsKarlssonConcrete K` is `IsHadamard K ∧
-HasHadamardTwoByTwo K`; the paper's first published structural input
-identifies that intrinsic locus with Karlsson's complete block model.
-
-This is the intrinsic interface extracted in the manuscript from journal
+This is the manuscript's Proposition 7(2), stated with the concrete
+predicates of this library. `HasNoninitialCubicRootRowAndColumn` already
+includes dephasing; the equivalence-transported form is derived internally in
+`concretePublishedInputs`, so Lean assumes the same or slightly less than the
+manuscript states. The manuscript attributes the proposition to journal
 Lemma 2.14 (arXiv v1 Lemma 2.15) of Szöllősi's
-[four-parameter paper](https://arxiv.org/abs/1008.0632). The name deliberately
-does not claim that the displayed Lean proposition is a verbatim rendering of
-the source's family notation. The source proof splits according to the cubic
-value at the intersection of the distinguished row and column: `1`, `omega`,
-or `omega^2`.
+[four-parameter paper](https://arxiv.org/abs/1008.0632).
 
-## What Lean already has
+Two routes are available. The **specialized route** below is the recommended
+one; it discharges the assumption without proving the general proposition.
+The **general route** in the appendix proves Proposition 7(2) as stated and is
+considerably larger.
 
-- cubic roots are exactly `1`, `omega`, and `omega^2`
-  relative to either primitive cubic phase
-  (`cubicRoot_eq_one_or_primitive_or_sq`);
-- the Tao matrix and its ordinary equivalence orbit are explicit;
-- Tao is Hadamard and has no Hadamard `2 x 2` submatrix;
-- Hadamardness, the `H₂` predicate, and Tao-orbit membership are
-  invariant under equivalence;
-- row and column permutations, phase operations, and dephasing are explicit;
-- a Hadamard `2 x 2` submatrix, together with the already available
-  Hadamard hypothesis, constructs `IsKarlssonConcrete`.
+## Specialized route (recommended)
 
-Thus the remaining work is a finite normal-form argument, not new atlas
-geometry and not a polynomial solver certificate.
+### The reduction
 
-## Source-proof decomposition
+`PublishedCubicRootCriterion` is consumed at exactly one place,
+`FourierBlocks.lean:35`, and only under `AllFourBlocksHadamard H`. The
+upstream producer of that branch constructs an explicit normal form:
 
-### 1. Normalize the distinguished row and column
-
-Prove that after permutations preserving the first row and column, any
-noninitial cubic row is
-
-```text
-(1, 1, omega, omega, omega^2, omega^2)
+```lean
+def fourierNormalForm (ω p q r s : ℂ) (D : Mat3) : Mat6 :=
+  Matrix.fromBlocks (fourier3 ω)
+    (rowGauge (fourierParameters p q) (fourier3 ω))
+    (columnGauge (fourierParameters r s) (fourier3 ω)) D
 ```
 
-and similarly for the distinguished column. This follows from orthogonality
-to the all-one row and the three-value cubic-root split.
+with `ω` a primitive cubic phase and `p, q, r, s` cubic roots of unity. The
+interface then discards that structure: `fourierNormalForm_hasCubicRowAndColumn`
+weakens it to the bare `HasNoninitialCubicRootRowAndColumn`.
 
-The useful Lean output should be an explicit equivalent matrix together with
-indices fixed to the second row and second column. Avoid a large existential
-normal-form structure: one small theorem returning the representative and
-its entry equations is easier to audit.
+Keeping the normal form instead makes the problem **finite**. Three of the four
+blocks are explicit, and `D` is forced by block orthogonality, so the branch is
+determined by `(ω, p, q, r, s)` — that is `2 × 3⁴ = 162` tuples.
 
-### 2. Intersection value `1`
+### Verified enumeration
 
-With the source notation, orthogonality gives
+All statements in this section were checked exhaustively; the reproduction
+script is in the appendix.
+
+| Outcome | Count |
+|---|---|
+| Forced `D` not unimodular (vacuous) | 36 |
+| **Hadamard-realizable** | **126** |
+| → contains a `2 x 2` Hadamard submatrix | 90 |
+| → equivalent to `taoMatrix` | 36 |
+| Unexplained | 0 |
+
+Two closed forms hold across all 126 realizable tuples.
+
+**Karlsson branch.** The witnessing submatrix is always rows `(0,3)` and
+columns `(0, 3+k)`. Because row `0` of the normal form is all ones, `B`'s first
+row is `(1,1,1)` and `C 0 0 = 1`, that submatrix is `!![1, 1; 1, D 0 k]`, which
+is Hadamard exactly when
 
 ```text
-a + b = -omega
-c + d = -1.
+D 0 k = -1.
 ```
 
-Unit modulus then forces, up to pair swaps,
+This is the `a = -1` dichotomy of the manuscript's ω-intersection case. On the
+realizable tuples every `D 0 k` is `±ω^m`, and whenever any entry is negative
+one of them is exactly `-1`.
+
+**Tao branch.** Writing `p = ω^{p'}` and so on, the Tao case occurs exactly when
 
 ```text
-(a,b) = (1,-omega^2)
-(c,d) = (omega,omega^2).
+p·q ≠ 1   and   p·q·r·s = 1,
 ```
 
-The remaining Hadamard equations force the displayed Tao matrix. The clean
-formal target is a direct equivalence theorem to `taoMatrix omega`;
-there is no need to classify arbitrary partial completions as a separate
-datatype.
+equivalently `p' + q' ≢ 0 (mod 3)` and `p' + q' + r' + s' ≡ 0 (mod 3)`.
 
-### 3. Intersection value `omega`
+All 36 Tao cases were confirmed *exactly* equivalent to `taoMatrix`, by
+canonicalization in the exponent field `ZMod 3` under permutation and
+cross-ratio dephasing — not merely by matching the Haagerup invariant.
 
-The source calculation gives a dichotomy:
+### Tao witnesses
 
-- `a = -1`, which immediately exhibits a Hadamard `2 x 2`
-  submatrix;
-- or the relevant entries are cubic and a further cubic row and column meet
-  at `1`, reducing to the preceding theorem.
+With the primitive phase of the target chosen appropriately, the **identity row
+permutation suffices in all 36 cases**; only the column permutation varies. It
+takes 18 distinct values, generated by six base permutations composed with
+cyclic shifts acting by `+1 mod 3` within each of `{0,1,2}` and `{3,4,5}`.
 
-Formalize the explicit orthogonality identity yielding this dichotomy, then
-reuse the `1`-intersection theorem.
+Exponent labels below: `ω` is written `0`, `ω^1` is `1`, `ω^2` is `2`. The `w`
+column is `0` for `fourier3 ω` and `1` for `fourier3 ω²`. The `phase` column
+selects `taoMatrix ω` (`0`) or `taoMatrix ω²` (`1`).
 
-### 4. Intersection value `omega^2`
+| w | p q r s | phase | τ | | w | p q r s | phase | τ |
+|---|---|---|---|---|---|---|---|---|
+| 0 | 0 1 0 2 | 0 | 0 3 4 1 5 2 | | 1 | 0 1 0 2 | 0 | 1 4 3 0 5 2 |
+| 0 | 0 1 1 1 | 0 | 1 4 5 2 3 0 | | 1 | 0 1 1 1 | 0 | 2 5 4 1 3 0 |
+| 0 | 0 1 2 0 | 0 | 2 5 3 0 4 1 | | 1 | 0 1 2 0 | 0 | 0 3 5 2 4 1 |
+| 0 | 0 2 0 1 | 1 | 1 4 3 0 5 2 | | 1 | 0 2 0 1 | 1 | 0 3 4 1 5 2 |
+| 0 | 0 2 1 0 | 1 | 0 3 5 2 4 1 | | 1 | 0 2 1 0 | 1 | 2 5 3 0 4 1 |
+| 0 | 0 2 2 2 | 1 | 2 5 4 1 3 0 | | 1 | 0 2 2 2 | 1 | 1 4 5 2 3 0 |
+| 0 | 1 0 0 2 | 0 | 0 5 3 1 4 2 | | 1 | 1 0 0 2 | 0 | 1 5 4 0 3 2 |
+| 0 | 1 0 1 1 | 0 | 1 3 4 2 5 0 | | 1 | 1 0 1 1 | 0 | 2 3 5 1 4 0 |
+| 0 | 1 0 2 0 | 0 | 2 4 5 0 3 1 | | 1 | 1 0 2 0 | 0 | 0 4 3 2 5 1 |
+| 0 | 1 1 0 1 | 1 | 1 3 5 0 4 2 | | 1 | 1 1 0 1 | 1 | 0 4 5 1 3 2 |
+| 0 | 1 1 1 0 | 1 | 0 5 4 2 3 1 | | 1 | 1 1 1 0 | 1 | 2 3 4 0 5 1 |
+| 0 | 1 1 2 2 | 1 | 2 4 3 1 5 0 | | 1 | 1 1 2 2 | 1 | 1 5 3 2 4 0 |
+| 0 | 2 0 0 1 | 1 | 1 5 4 0 3 2 | | 1 | 2 0 0 1 | 1 | 0 5 3 1 4 2 |
+| 0 | 2 0 1 0 | 1 | 0 4 3 2 5 1 | | 1 | 2 0 1 0 | 1 | 2 4 5 0 3 1 |
+| 0 | 2 0 2 2 | 1 | 2 3 5 1 4 0 | | 1 | 2 0 2 2 | 1 | 1 3 4 2 5 0 |
+| 0 | 2 2 0 2 | 0 | 0 4 5 1 3 2 | | 1 | 2 2 0 2 | 0 | 1 3 5 0 4 2 |
+| 0 | 2 2 1 1 | 0 | 1 5 3 2 4 0 | | 1 | 2 2 1 1 | 0 | 2 4 3 1 5 0 |
+| 0 | 2 2 2 0 | 0 | 2 3 4 0 5 1 | | 1 | 2 2 2 0 | 0 | 0 5 4 2 3 1 |
 
-Obtain this case from the `omega` case by conjugation or by swapping
-the two primitive cubic phases. Prove the transport once; do not duplicate
-the entry calculation.
+The 36 vacuous tuples are exactly those with `p' + q' ≢ 0` and
+`p' + q' + r' + s' ≢ 0` for which the forced `D` acquires an entry of modulus
+`0` or `√3`; they are discharged by contradiction with unimodularity.
 
-### 5. Public closure
+### Implementation plan
 
-Combine the three cases to construct a theorem term of
-`PublishedCubicRootCriterion`. At that point the classification
-endpoint will retain only `IntrinsicKarlssonSeamIdentification` as an
-external argument.
+1. **Widen the interface.** Change `FourierBlockAlgebra.reduce` to return the
+   normal-form data rather than `HasNoninitialCubicRootRowAndColumn`. Its
+   producer already constructs that data. This is the only step that modifies
+   proofs which currently compile, and it should be a rewiring rather than a
+   reproof.
 
-## Recommended implementation order
+2. **Force `D`.** From `IsHadamard H` in block form derive `D = forcedD E B C`.
+   `BlockCompletion.lean` supplies this.
 
-1. cubic-row multiplicity and permutation normal form;
-2. unit-circle two-sum lemmas used in the `1` case;
-3. explicit Tao completion/equivalence theorem;
-4. `omega`-intersection dichotomy;
-5. conjugation transport and final assembly.
+3. **Closed form for the first row of `D`.** `B = rowGauge (1,p,q) (fourier3 ω)`
+   has the explicit inverse `B⁻¹ = (1/3) • (fourier3 ω)ᴴ * diag (1, p⁻¹, q⁻¹)`,
+   so `D 0 k` is obtained without a general matrix inversion.
 
-The first two stages are small and reusable. The Tao completion theorem is
-the substantive finite calculation. It should remain entrywise and
-human-readable; an automatically generated table is acceptable only as a
-separate certificate imported by a short conceptual theorem.
+4. **The dichotomy.** Case split on the cubic-root values of `p, q, r, s` using
+   the existing `cubic_root_eq_one_or_omega` style lemmas. When `p·q = 1` or
+   `p·q·r·s ≠ 1`, exhibit `k` with `D 0 k = -1` and build the `2 x 2` witness at
+   rows `(0,3)`, columns `(0,3+k)`; this yields `HasHadamardTwoByTwo`, hence
+   `IsKarlssonConcrete`. When the forced `D` is not unimodular, close the branch
+   by contradiction.
 
-## Honest scope
+5. **The Tao branch.** For `p·q ≠ 1` and `p·q·r·s = 1`, supply the identity row
+   permutation, the column permutation from the table above, and the dephasing
+   factors (all cubic roots, hence expressible in `ω`) to build
+   `Equivalent H (taoMatrix ω)` and therefore `IsTaoOrbit`.
 
-This is feasible but materially larger than the residual Karlsson seam
-bridge. The published proof compresses “fill out the fourth row and the third
-and fourth columns” into one sentence; Lean must make that uniqueness
-calculation explicit. It should therefore be pursued after the seam bridge,
-not interleaved with it.
+Estimated size: roughly 800–1500 lines, with step 5 the bulkiest. Nothing in
+steps 2–5 is open; they are bounded cubic-root algebra over a three-element
+exponent set. If step 5 is emitted as a generated table, split it across
+modules from the outset — see the memory ceiling discussed in the commit that
+split `KarlssonResidualCertificate.lean`.
+
+### Consequence for the trust boundary
+
+This route removes `PublishedCubicRootCriterion` entirely rather than proving
+Proposition 7(2) in the manuscript's generality. The remaining assumption is
+then `IntrinsicKarlssonSeamIdentification` alone. Note that the assumption
+being removed is the one with a citable published statement and a proof
+sketch, while the one retained is a residual expressed in this library's
+internal predicates. That is a reason to sequence the work deliberately, not a
+reason to avoid it.
+
+## Appendix A: general route
+
+Proving Proposition 7(2) as stated. Retained because it remains the correct
+plan if the specialized route's interface change proves undesirable.
+
+Lean already has: cubic roots are exactly `1`, `ω`, `ω²` relative to either
+primitive cubic phase; the explicit Tao orbit; Tao is Hadamard with no Hadamard
+`2 x 2` submatrix; invariance of all three predicates under equivalence; and
+explicit row/column permutation, phase, and dephasing operations.
+
+1. **Cubic row and column normal form.** Show that a noninitial cubic row of a
+   dephased order-six Hadamard matrix is, after permutations fixing the first
+   row and column, equal to `(1, 1, ω, ω, ω², ω²)`. Orthogonality to the
+   all-ones row gives `n₁ + n_ω ω + n_ω² ω² = 0` with the multiplicities
+   summing to six; linear independence of `1` and `ω` over `ℚ` forces each
+   multiplicity to be `2`.
+
+2. **Intersection value `1`.** Orthogonality gives `a + b = -ω` and `c + d = -1`;
+   unit modulus forces `(a,b) = (1, -ω²)` and `(c,d) = (ω, ω²)` up to swaps, and
+   the remaining equations force the Tao matrix. `TwoCircle.lean` already
+   provides the unit-modulus pair machinery.
+
+3. **Intersection value `ω`.** A dichotomy: either `a = -1`, exhibiting a
+   Hadamard `2 x 2` submatrix directly, or the entries are cubic and a further
+   cubic row and column meet at `1`, reducing to the previous case.
+
+4. **Intersection value `ω²`.** Obtain from the `ω` case by conjugation, which
+   swaps the two primitive cubic phases and maps the Tao orbit to itself.
+
+5. **Assembly.** Combine the three cases.
+
+The substantive cost is step 2: the manuscript compresses the completion
+uniqueness calculation into one sentence, and Lean must make it explicit.
+
+## Appendix B: reproduction script
+
+```python
+import itertools, numpy as np
+from itertools import permutations
+w0 = np.exp(2j*np.pi/3); roots = [1, w0, w0**2]
+F3   = lambda w: np.array([[w**(i*j) for j in range(3)] for i in range(3)], dtype=complex)
+rowG = lambda p, X: np.array([[p[i]*X[i,j] for j in range(3)] for i in range(3)])
+colG = lambda p, X: rowG(p, X.T).T
+fD   = lambda E,B,C: -C @ E.conj().T @ np.linalg.inv(B).conj().T
+def tao(w):
+    return np.block([[np.array([[1,1,1],[1,1,w],[1,w,1]],dtype=complex),
+                      np.array([[1,1,1],[w,w**2,w**2],[w**2,w**2,w]],dtype=complex)],
+                     [np.array([[1,w,w**2],[1,w**2,w**2],[1,w**2,w]],dtype=complex),
+                      np.array([[1,w,w**2],[w,1,w],[w**2,w,1]],dtype=complex)]])
+had  = lambda H: np.allclose(abs(H),1,atol=1e-9) and np.allclose(H@H.conj().T,6*np.eye(6),atol=1e-7)
+def Z3(H):                       # exponent matrix, or None if some entry is not cubic
+    a = np.zeros((6,6),dtype=int)
+    for i in range(6):
+        for j in range(6):
+            for k in range(3):
+                if abs(H[i,j]-w0**k) < 1e-7: a[i,j] = k; break
+            else: return None
+    return a
+dep = lambda M: (M - M[:,[0]] - M[[0],:] + M[0,0]) % 3
+PERMS = np.array(list(permutations(range(6))))          # PERMS[0] is the identity
+tgts  = [dep(Z3(tao(w))) for w in (w0, w0**2)]
+for wi, w in enumerate((w0, w0**2)):
+    for pi,qi,ri,si in itertools.product(range(3), repeat=4):
+        p,q,r,s = roots[pi],roots[qi],roots[ri],roots[si]
+        E, B, C = F3(w), rowG([1,p,q],F3(w)), colG([1,r,s],F3(w))
+        D = fD(E,B,C); H = np.block([[E,B],[C,D]])
+        if not had(H):
+            print((wi,pi,qi,ri,si), "vacuous"); continue
+        ks = [k for k in range(3) if abs(D[0,k]+1) < 1e-7]
+        if ks:
+            print((wi,pi,qi,ri,si), "karlsson k =", ks[0]); continue
+        M = Z3(H)[PERMS[0],:]
+        T = np.transpose(M[:,PERMS],(1,0,2))
+        Dz = (T - T[:,:,[0]] - T[:,[0],:] + T[:,0,0][:,None,None]) % 3
+        for ti,tgt in enumerate(tgts):
+            hit = np.where((Dz == tgt).all(axis=(1,2)))[0]
+            if len(hit):
+                print((wi,pi,qi,ri,si), "tao phase", ti, "tau", PERMS[hit[0]].tolist()); break
+```
