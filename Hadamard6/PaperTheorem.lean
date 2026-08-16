@@ -143,6 +143,12 @@ theorem paper_classification_corollary
       change InFiniteCornerAtlas H.1
       exact paper_finite_corner_completeness hcubic hkarlsson H.2
 
+/- The complete trust boundary.  The two statements printed here are the only
+mathematical inputs the classification assumes; the axiom reports below show
+that nothing else is.  Reading both together is the intended audit. -/
+#print PublishedCubicRootCriterion
+#print IntrinsicKarlssonSeamIdentification
+
 #print axioms paper_failed_corner_search_forces_karlsson_or_tao
 #print axioms paper_karlsson_has_finite_corner
 #print axioms paper_tao_has_finite_corner
