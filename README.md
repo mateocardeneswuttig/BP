@@ -1,4 +1,4 @@
-# Lean audit of the order-six Hadamard classification
+# A complete classification of the complex Hadamard matrices of order six
 
 This repository is the Lean 4 audit trail for the paper's classification of
 order-six complex Hadamard matrices.  It formalizes the finite-corner
