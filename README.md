@@ -1,12 +1,12 @@
 # A complete classification of the complex Hadamard matrices of order six
 
-This repository is the Lean 4 audit trail for the paper's classification of
+This repository contains the Lean 4 audit trail for the paper's classification of 
 order-six complex Hadamard matrices.  It formalizes the finite-corner
 argument, its Karlsson and Tao branches, completion soundness, and the final
 two-sided equality on equivalence classes.
 
-For a first reading, open [`Hadamard6/PaperTheorem.lean`](Hadamard6/PaperTheorem.lean).
-It is deliberately short and follows the manuscript's logical order:
+For a first reading, open [`Hadamard6/PaperTheorem.lean`](Hadamard6/PaperTheorem.lean), 
+which follows the manuscript's logical order:
 
 ```text
 Hadamard H
@@ -143,8 +143,8 @@ classification theorem.  In particular, it proves internally:
 
 Lean does not formalize the cubic-root literature proposition itself, the
 final seam-identification input above, or the paper's separate comparison
-between the nonexceptional finite-corner output and Szöllősi's historical
-Construction 3.1 output.  The separate algebraic-atlas geometry is also
+between the nonexceptional finite-corner output and Szöllősi's Construction 3.1. 
+The separate algebraic-atlas geometry is also
 outside this repository's formal boundary.  See
 [`LEAN_ASSUMES_AND_PROVES.md`](LEAN_ASSUMES_AND_PROVES.md) for the precise
 statement of this boundary.
@@ -182,15 +182,6 @@ For a theorem-by-theorem correspondence with the manuscript, read
 [`PAPER_PROOF_MAP.md`](PAPER_PROOF_MAP.md).  For the exact cubic criterion and
 its formalization status, read
 [`CUBIC_CRITERION_FORMALIZATION.md`](CUBIC_CRITERION_FORMALIZATION.md).
-
-## Why `lake build` reports thousands of jobs
-
-Lake counts every compiled module in the pinned Mathlib dependency graph as a
-job. The count is not the number of assumptions, classification cases, or
-independent Hadamard arguments. A full build reports roughly 3,500 jobs, the
-overwhelming majority inherited from Mathlib. The human-readable logical
-spine remains the nine endpoints in `PaperTheorem.lean`; the deeper modules
-supply their exact algebra and certificate proofs.
 
 ## Trust statement
 
