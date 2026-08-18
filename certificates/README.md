@@ -147,7 +147,6 @@ asset for the Section IV plot. `plot_figure_composite.py` reconstructs the
 five discriminant slices and torus; `plot_branch_collision.py` reconstructs
 the inset. The figure is an illustration of the normalized discriminant; it is not used to
 prove a theorem, estimate a global measure, or count equivalence classes.
-
 ## What is intentionally absent
 
 Exploratory searches, floating-point Karlsson surveys, and the obsolete
