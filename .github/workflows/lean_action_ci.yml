@@ -20,47 +20,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # The generated certificate modules each need several GiB to elaborate.
-    # Building them concurrently exhausts the runner, which is then torn down
-    # and reported as a cancelled job with exit code 143 rather than as a
-    # build failure. Lake has no `--jobs` option, but it schedules builds on
-    # Lean's thread pool, so this serialises them and caps peak memory at one
-    # module. Slower, but it fits.
+    # The heaviest generated certificate modules peak near 8 GiB each, so two
+    # of them at once exceeds a 16 GiB runner. Lake has no `--jobs` option,
+    # but it schedules module builds on Lean's thread pool, so this serialises
+    # them and caps peak memory at one module. Slower, but it fits.
+    #
+    # This needs a public-repository runner (4-core, 16 GiB). On a private
+    # repository `ubuntu-latest` is 2-core / 7 GiB and a single certificate
+    # module does not fit; the job is then torn down and reported as cancelled
+    # with exit code 143, which looks like a timeout but is not one.
     env:
       LEAN_NUM_THREADS: 1
 
     steps:
       - uses: actions/checkout@v5
-      # Mathlib plus the generated exact-certificate modules require about
-      # 10 GiB. GitHub's hosted image also contains large Android, .NET, and
-      # Haskell toolchains that this project never uses; removing them leaves
-      # enough space for a clean Lean build.
-      - name: Prepare runner resources for Lean
-        run: |
-          df -h /
-          sudo rm -rf -- \
-            /usr/local/lib/android \
-            /usr/share/dotnet \
-            /opt/ghc \
-            /usr/local/.ghcup
-          # Some generated certificate modules have a larger elaboration peak
-          # than the hosted runner's physical RAM.  The build is already
-          # serialized; swap prevents the runner from terminating that single
-          # Lean process with SIGTERM (exit 143).
-          sudo fallocate -l 8G /swapfile
-          sudo chmod 600 /swapfile
-          sudo mkswap /swapfile
-          sudo swapon /swapfile
-          df -h /
-          free -h
       - uses: leanprover/lean-action@v1
         with:
           # This target transitively imports the complete 107-module audited
           # proof spine. Naming it avoids building unrelated default targets.
           build-args: Hadamard6.PaperTheorem
-          # The .lake directory is about 10 GiB; restoring and saving it can
-          # temporarily duplicate that footprint. Mathlib's upstream binary
-          # cache remains enabled by lean-action.
-          use-github-cache: "false"
       - name: Audit paper-facing theorem boundary
         run: python3 audit_public_theorem.py
