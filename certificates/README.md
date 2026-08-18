@@ -115,11 +115,3 @@ asset for the Section IV plot. `plot_figure_composite.py` reconstructs the
 five discriminant slices and torus; `plot_branch_collision.py` reconstructs
 the inset. The figure is an illustration of the normalized discriminant; it is not used to
 prove a theorem, estimate a global measure, or count equivalence classes.
-
-## What is intentionally absent
-
-The repository does not include the exploratory Karlsson product-exceptional
-search, global Tao frame census, or framed Karlsson factorization. Those
-claims were removed from the manuscript and therefore require no publication
-certificate. Classification-specific Karlsson arithmetic remains in Lean,
-where it is kernel checked.
