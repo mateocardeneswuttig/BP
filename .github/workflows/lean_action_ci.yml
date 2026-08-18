@@ -35,7 +35,7 @@ jobs:
       # 10 GiB. GitHub's hosted image also contains large Android, .NET, and
       # Haskell toolchains that this project never uses; removing them leaves
       # enough space for a clean Lean build.
-      - name: Free disk space for Lean
+      - name: Prepare runner resources for Lean
         run: |
           df -h /
           sudo rm -rf -- \
@@ -43,7 +43,16 @@ jobs:
             /usr/share/dotnet \
             /opt/ghc \
             /usr/local/.ghcup
+          # Some generated certificate modules have a larger elaboration peak
+          # than the hosted runner's physical RAM.  The build is already
+          # serialized; swap prevents the runner from terminating that single
+          # Lean process with SIGTERM (exit 143).
+          sudo fallocate -l 8G /swapfile
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
           df -h /
+          free -h
       - uses: leanprover/lean-action@v1
         with:
           # This target transitively imports the complete 107-module audited
