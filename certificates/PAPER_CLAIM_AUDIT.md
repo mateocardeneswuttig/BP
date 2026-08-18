@@ -17,7 +17,9 @@ history of the exploratory computation.
 | Complement positivity, including `omega_n = 0` | Exact | Printed proof and `generic_cover/positivity_lemma_reduction.py` |
 | Generic lower-block minus matching | Exact | Printed irreducibility/dominance proof; `generic_cover/exact_lower_block_specialization.py` verifies nonempty regular localization and excludes the plus matching |
 | Regular seed-domain theorem (Theorem 21) | Exact | Printed proof plus the five generic-cover certificates above; the dominance step cites Bondal--Zhdanovskiy and semialgebraic Hardt triviality |
-| Product-regular reach outside Karlsson and Tao (Theorem 22) | Exact | Printed `100 > 80` proof, including the biunimodular endpoint reduction and Cayley sign argument; all six files in `product_escape/` verify the algebraic and finite subclaims |
+| Exact product-regular reach (Theorem 22) | Exact | The printed `100 > 80` proof and all six files in `product_escape/` cover classes outside Karlsson and Tao; `product_exceptional/` proves `K_6^(3) \ P_6 = {[H_x]}` and excludes Tao and `H_x` in all `14,400` frames |
+| Product-exceptional Karlsson singleton | Exact, using the published Matszangosz--Szollosi routing theorem | Printed sector reduction and `product_exceptional/karlsson_product_regular_coverage/karlsson_product_exceptional_theorem_check.py` |
+| Tao is product exceptional | Exact finite enumeration | `product_exceptional/tao_product_exceptional_check.py` |
 | Representative ramification seed and table | Rigorous exact/interval diagnostic, explicitly not a theorem about a neighborhood | `ramification/ramification_seed_certificate.py` |
 | Section IV figure | Numerical illustration only | `figure/` sources, component data, component PDFs, and final vector asset |
 
@@ -34,21 +36,18 @@ The post-classification product geometry is deliberately absent from the Lean
 dependency graph. It is supported by the smaller exact and interval
 certificates in this directory.
 
-## Claims removed to minimize certification
+## Claims omitted to minimize certification
 
-The audit removed the following stronger but unnecessary assertions from the
-manuscript and its Supplemental Material:
+The audit omits the following unnecessary assertions from the manuscript and
+its Supplemental Material:
 
-- a unique product-exceptional Karlsson class;
-- global product exceptionality of Tao;
-- a complete `14,400`-frame census for those assertions;
-- framed Karlsson noncontainment and its unprinted degree-five/degree-eight
-  factorization;
+- framed Karlsson noncontainment and its obsolete unprinted
+  degree-five/degree-eight factorization;
 - the `13,632`-frame and `720`-ramified-frame numerical census at the example
   seed.
 
-None is needed for the classification, Szöllősi's conjecture, the regular
-seed-domain theorem, or product-regular reach outside the named sectors.
+Neither is needed for the classification, Szöllősi's conjecture, the regular
+seed-domain theorem, or the exact product-regular reach theorem.
 
 ## No frozen solver output
 
