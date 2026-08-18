@@ -11,6 +11,9 @@ fails by raising an exception if the claimed identity or bound is false.
 `SHA256SUMS` fixes the audited contents of this directory, and the verifier
 checks that manifest before running any calculation.
 
+After an intentional certificate-source change, regenerate the manifest with
+`python certificates/regenerate_manifest.py` and review the resulting diff.
+
 These programs certify the exact algebraic identities and finite enumerations
 used by the printed proofs.  They are not substitutes for the human routing,
 density, or sign arguments in the Supplemental Material; the claim map below
@@ -27,9 +30,21 @@ python -m pip install -r certificates/requirements.txt
 python certificates/verify.py
 ```
 
-The default command verifies every theorem-facing calculation. It takes about
-one minute on a recent laptop. The independent incidence checker uses only the
-Python standard library and does not import SymPy.
+The default command verifies the reconstruction calculations together with
+the exact all-frame Tao and $H_\times$ exclusions. It takes about one minute
+on a recent laptop. The independent incidence checker and the primary
+$H_\times$ audit use only the Python standard library.
+
+The complete Karlsson-sector refinement uses characteristic-zero elimination
+and is intentionally run sequentially. Install `msolve`, make it available in
+`PATH` (or set `MSOLVE_BIN`), and run:
+
+```bash
+python certificates/verify.py --full-product-exceptional
+```
+
+This is the full certificate for
+`K_6^(3) \ P_6 = {[H_x]}`; it is substantially slower than the default suite.
 
 The representative ramification seed is illustrative rather than
 theorem-facing. Verify its exact and Arb bounds with:
@@ -100,6 +115,23 @@ performed in a vector editor; no numerical content was changed at that stage.
   the same orbit table and rational elimination independently with
   `fractions.Fraction`.
 
+### Exact product-exceptional classes
+
+- `product_exceptional/tao_product_exceptional_check.py` checks all `14,400`
+  ordered Tao frames exactly in the Eisenstein integers and proves that every
+  frame fails a product-regularity guard.
+- `product_exceptional/karlsson_product_regular_coverage/exact_product_exceptional_karlsson.py`
+  verifies $H_\times H_\times^*=6I_6$, its $H_2$ witness, all `400`
+  positional minors, and the vanishing companion resultant in all `14,400`
+  ordered frames.
+- `product_exceptional/karlsson_product_regular_coverage/sympy_verify_product_exceptional_karlsson.py`
+  independently derives and checks the $H_\times$ companion calculation.
+- `product_exceptional/karlsson_product_regular_coverage/karlsson_product_exceptional_theorem_check.py`
+  is the sequential master audit for
+  `K_6^(3) \ P_6 = {[H_x]}`. It checks the ordinary 49-case routing table,
+  every rescue frame, the affine-Fourier boundary, and the two-circulant
+  sector. Its exact elimination jobs require `msolve`.
+
 ### Representative ramification seed
 
 - `ramification/ramification_seed_certificate.py` verifies the exact number
@@ -115,3 +147,10 @@ asset for the Section IV plot. `plot_figure_composite.py` reconstructs the
 five discriminant slices and torus; `plot_branch_collision.py` reconstructs
 the inset. The figure is an illustration of the normalized discriminant; it is not used to
 prove a theorem, estimate a global measure, or count equivalence classes.
+## What is intentionally absent
+
+Exploratory searches, floating-point Karlsson surveys, and the obsolete
+framed degree-five/degree-eight factorization are not included. The retained
+files are precisely the exact calculations used by the printed
+product-exceptional theorem. Classification-specific Karlsson arithmetic
+remains in Lean, where it is kernel checked.

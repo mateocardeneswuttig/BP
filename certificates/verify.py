@@ -32,6 +32,16 @@ RAMIFICATION_CERTIFICATES = (
     "ramification/ramification_seed_certificate.py",
 )
 
+PRODUCT_EXCEPTIONAL_FAST_CERTIFICATES = (
+    "product_exceptional/tao_product_exceptional_check.py",
+    "product_exceptional/karlsson_product_regular_coverage/exact_product_exceptional_karlsson.py",
+    "product_exceptional/karlsson_product_regular_coverage/sympy_verify_product_exceptional_karlsson.py",
+)
+
+PRODUCT_EXCEPTIONAL_FULL_CERTIFICATES = (
+    "product_exceptional/karlsson_product_regular_coverage/karlsson_product_exceptional_theorem_check.py",
+)
+
 
 def verify_manifest() -> None:
     """Check that the audited certificate package is byte-for-byte intact."""
@@ -84,17 +94,30 @@ def main() -> None:
         action="store_true",
         help="also run the illustrative exact/Arb ramification-seed audit",
     )
+    parser.add_argument(
+        "--full-product-exceptional",
+        action="store_true",
+        help="run the complete Karlsson singleton audit (requires msolve)",
+    )
     args = parser.parse_args()
 
     verify_manifest()
 
     for certificate in THEOREM_CERTIFICATES:
         run(certificate)
+    for certificate in PRODUCT_EXCEPTIONAL_FAST_CERTIFICATES:
+        run(certificate)
+    if args.full_product_exceptional:
+        for certificate in PRODUCT_EXCEPTIONAL_FULL_CERTIFICATES:
+            run(certificate)
     if args.ramification:
         for certificate in RAMIFICATION_CERTIFICATES:
             run(certificate)
 
-    count = len(THEOREM_CERTIFICATES) + (
+    count = len(THEOREM_CERTIFICATES) + len(PRODUCT_EXCEPTIONAL_FAST_CERTIFICATES) + (
+        len(PRODUCT_EXCEPTIONAL_FULL_CERTIFICATES)
+        if args.full_product_exceptional else 0
+    ) + (
         len(RAMIFICATION_CERTIFICATES) if args.ramification else 0
     )
     print(f"\nALL {count} REQUESTED CERTIFICATES PASSED")
