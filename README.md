@@ -109,7 +109,7 @@ A successful run ends with:
 
 ```text
 PASS Lean source contains no sorry, admit, project axiom/constant, opaque/unsafe declaration, or native_decide
-PASS all 89 Hadamard6 modules are reachable from Hadamard6.lean
+PASS all 107 Hadamard6 modules are reachable from Hadamard6.lean
 PASS nine paper-facing axiom reports use only propext, Classical.choice, and Quot.sound
 ALL PUBLIC LEAN SOURCE AND AXIOM CHECKS PASSED
 ```
@@ -123,9 +123,9 @@ propositions:
 
 1. `PublishedCubicRootCriterion`, the cubic-root row-and-column implication
    to Tao or the intrinsic Karlsson locus; and
-2. `IntrinsicKarlssonSeamIdentification`, the residual part of the published
-   `H₂`--Karlsson parametrization that identifies Lean's explicitly derived
-   exceptional cores with the affine-Fourier seams.
+2. `KarlssonRawOrSeamCoverage`, the concrete coordinate form of the published
+   `H₂`--Karlsson parametrization: every `H₂`-reducible Hadamard has either a
+   canonical Karlsson raw presentation or an affine-Fourier seam presentation.
 
 They are visible theorem parameters, not Lean `axiom` declarations, opaque
 witnesses, or definitions chosen to make the conclusion automatic.  Lean
@@ -136,16 +136,19 @@ classification theorem.  In particular, it proves internally:
 - the singular-corner reduction and fixed-Gram fibre trichotomy;
 - complementary-block routing and simultaneous Fourier normalization;
 - the exact Tao orbit and its finite-corner witness;
-- intrinsic `H₂` normalization and the regular and seam Karlsson cases;
+- finite-corner certificates for the regular Karlsson chart and every
+  affine-Fourier seam;
 - forced completion and retained-output soundness;
 - `HasFiniteCorner H <-> InFiniteCornerAtlas H`; and
 - matrix-level and quotient-level two-sided classification equalities.
 
-Lean does not formalize the cubic-root literature proposition itself, the
-final seam-identification input above, or the paper's separate comparison
-between the nonexceptional finite-corner output and Szöllősi's Construction 3.1. 
+Lean does not formalize either published parametrization/criterion itself or
+the paper's separate comparison between the nonexceptional finite-corner
+output and Szöllősi's Construction 3.1.
 The separate algebraic-atlas geometry is also
-outside this repository's formal boundary.  See
+outside the Lean formal boundary. Its retained exact and interval
+calculations are reproducible from [`certificates/`](certificates/README.md).
+See
 [`LEAN_ASSUMES_AND_PROVES.md`](LEAN_ASSUMES_AND_PROVES.md) for the precise
 statement of this boundary.
 
@@ -161,6 +164,7 @@ statement of this boundary.
 | Tao branch | `TaoOrbit.lean`, `TaoAtlas.lean` |
 | Intrinsic Karlsson normalization | `H2CanonicalForm.lean`, `H2BlockNormalization.lean`, `H2DegenerateNormalization.lean`, `H2KarlssonParametrization.lean` |
 | Karlsson regular chart and seams | `Karlsson*.lean`, `FourierSeamCertificate.lean` |
+| Post-classification geometry certificates | `certificates/` |
 
 The files are collected under the `Hadamard6` namespace and directory.  The
 root [`Hadamard6.lean`](Hadamard6.lean) imports

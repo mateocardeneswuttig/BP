@@ -5,8 +5,8 @@ theorems from top to bottom; they deliberately match the manuscript order.
 
 | Manuscript statement | Manuscript label | Lean theorem | External input at this step |
 |---|---|---|---|
-| Failure of the corner search forces Karlsson or Tao | `thm:finitecornerintro` (typeset as a proposition) | `paper_failed_corner_search_forces_karlsson_or_tao` | cubic-root criterion |
-| Every Karlsson class has a finite corner | `prop:karlsson-finite-corner` | `paper_karlsson_has_finite_corner` | residual seam consequence of the published `H₂`--Karlsson parametrization |
+| Absence of every finite-corner witness forces Karlsson or Tao | `thm:finitecornerintro` (typeset as a proposition) | `paper_failed_corner_search_forces_karlsson_or_tao` | cubic-root criterion |
+| Every Karlsson class has a finite corner | `prop:karlsson-finite-corner` | `paper_karlsson_has_finite_corner` | complete published `H₂`--Karlsson raw-or-seam parametrization |
 | Tao has a finite corner | `prop:tao-finite-corner` | `paper_tao_has_finite_corner` | none |
 | Every order-six Hadamard matrix has a finite corner | `thm:classification` | `paper_finite_corner_theorem` | the two interfaces above |
 | Non-Tao, non-Karlsson completed-output recovery | intermediate consequence used before `prop:historical-output-identification` | `paper_nonexceptional_completed_dilation_recovery` | cubic-root criterion only |
@@ -15,10 +15,9 @@ theorems from top to bottom; they deliberately match the manuscript order.
 | Matrix-level two-sided equality | `cor:atlas-classification` before quotienting | `paper_total_output_corollary` | the two interfaces above |
 | Equality on equivalence classes | `cor:atlas-classification` | `paper_classification_corollary` | the two interfaces above |
 
-The manuscript currently labels the failed-search proposition with a `thm:`
-key even though it is typeset as a proposition. The table records both the
-mathematical role and the literal source label so the audit does not silently
-invent a cleaner reference.
+The manuscript's source key for the failed-search proposition begins with
+`thm:` although the statement is typeset as a proposition. The table records
+the literal key so references can be audited mechanically.
 
 ## Internal dependency layers
 
@@ -50,10 +49,10 @@ formal vocabulary uses `InFiniteCornerAtlas` throughout.  The paper's
 separate construction-level identification with the nonexceptional output of Construction 3.1 is not
 encoded as a definitional alias.
 
-The modules beginning `H2...` are part of the public dependency graph. They
-derive Karlsson's normalization and canonical raw chart internally, leaving
-only the explicit affine-Fourier seam identification as the unformalized
-remainder of the paper's first published input.
+The modules beginning `H2...` provide a deeper internal derivation of
+Karlsson's normalization and canonical raw chart. The public theorem does not
+need to identify their final exceptional cores: it takes the complete
+published raw-or-seam parametrization directly, matching Proposition 7(1).
 
 ## Deliberate formal boundary
 

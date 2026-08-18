@@ -158,11 +158,10 @@ split `KarlssonResidualCertificate.lean`.
 
 This route removes `PublishedCubicRootCriterion` entirely rather than proving
 Proposition 7(2) in the manuscript's generality. The remaining assumption is
-then `IntrinsicKarlssonSeamIdentification` alone. Note that the assumption
-being removed is the one with a citable published statement and a proof
-sketch, while the one retained is a residual expressed in this library's
-internal predicates. That is a reason to sequence the work deliberately, not a
-reason to avoid it.
+then `KarlssonRawOrSeamCoverage`, the concrete coordinate form of the
+published complete `H₂`--Karlsson parametrization. The public theorem keeps
+that input separate from the cubic criterion so either literature dependency
+can later be formalized without changing the classification spine.
 
 ## Appendix A: general route
 

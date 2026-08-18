@@ -39,13 +39,11 @@ already produced a noninitial cubic-root row and column. Its conclusion is
 stated exactly as Tao or `IsKarlssonConcrete`, matching the two sectors named
 in the manuscript.
 
-`IntrinsicKarlssonSeamIdentification` enters only after routing has identified
-the intrinsic `H₂` locus and Lean has normalized it, extracted canonical raw
-coordinates, and reduced every failure of the regular chart to the common
-Fourier point or four explicit diagonal cores. It identifies only those
-remainders with the displayed affine-Fourier seams. Lean separately checks
-the reciprocal orientation, selection of nonzero `M₊`, and both finite-corner
-certificates.
+`KarlssonRawOrSeamCoverage` is the concrete coordinate form of the published
+complete `H₂`--Karlsson parametrization. It says that an `H₂`-reducible
+Hadamard has either a canonical raw Karlsson presentation or an
+affine-Fourier seam presentation. Lean then checks the reciprocal orientation,
+selection of nonzero `M₊`, and the finite-corner certificates for both pieces.
 
 The theorem `paper_nonexceptional_completed_dilation_recovery` excludes Karlsson and
 Tao in its hypotheses, so the routing disjunction closes it without the
@@ -69,7 +67,7 @@ native-decision shortcuts. The thousands figure shown by Lake is its
 scheduler count including Mathlib, not a count of assumptions or bespoke
 classification lemmas.
 
-The axiom report concerns kernel dependencies. The cubic-root and Karlsson
-seam propositions remain explicit arguments of the displayed theorems, so a
-clean axiom report is not presented as an unconditional proof of those two
-inputs.
+The axiom report concerns kernel dependencies. The cubic-root criterion and
+complete Karlsson parametrization remain explicit arguments of the displayed
+theorems, so a clean axiom report is not presented as an unconditional proof
+of those two historical inputs.
