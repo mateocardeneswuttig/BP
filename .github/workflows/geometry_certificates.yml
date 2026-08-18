@@ -1,0 +1,27 @@
+name: Reconstruction geometry certificates
+
+on:
+  push:
+    paths:
+      - "certificates/**"
+      - ".github/workflows/geometry_certificates.yml"
+  pull_request:
+    paths:
+      - "certificates/**"
+      - ".github/workflows/geometry_certificates.yml"
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+          cache: pip
+          cache-dependency-path: certificates/requirements.txt
+      - name: Install pinned dependencies
+        run: python -m pip install -r certificates/requirements.txt
+      - name: Verify exact geometry and representative seed
+        run: python certificates/verify.py --ramification

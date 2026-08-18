@@ -16,21 +16,16 @@ The public theorem has two explicit literature-facing arguments:
 
 * `PublishedCubicRootCriterion`, item (2) of the paper's published structural
   proposition, stated with the intrinsic Karlsson predicate;
-* `IntrinsicKarlssonSeamIdentification`, the exact residual consequence of
-  item (1) still needed after Lean's internal derivation of the `H₂`
-  normalization and Karlsson coordinates.
+* `KarlssonRawOrSeamCoverage`, the concrete coordinate form of item (1):
+  every `H₂`-reducible Hadamard has either a canonical Karlsson raw
+  presentation or an affine-Fourier seam presentation.
 
-Thus the second argument is not a third structural hypothesis silently added
-to the paper.  It is the unformalized remainder of the paper's first
-published input.  The argument names make this boundary visible: theorem
-parameters are not discharged merely because `#print axioms` reports no
-project axioms.
-
-Lean derives the intrinsic `H₂` normalization, raw coordinates, canonical
-orientation, four exceptional cores, reciprocal-orientation reduction, and
-finite-corner certificates internally. Both inputs remain visible theorem
-arguments; atlas membership and class equality are consequences of witness
-existence, not definitions used to obtain it.
+Thus the two arguments are exactly the two published inputs displayed in the
+paper. Lean then proves the regular Karlsson and affine-Fourier finite-corner
+certificates, the Tao branch, routing, soundness, and both class inclusions.
+Both inputs remain visible theorem arguments; atlas membership and class
+equality are consequences of witness existence, not definitions used to
+obtain it.
 -/
 
 namespace Hadamard6
@@ -49,8 +44,8 @@ private theorem paper_corner_search_routing
   · exact Or.inr (Or.inr hTao)
   · exact Or.inl (inFiniteCornerAtlas_hasFiniteCorner hfinite)
 
-/-- Paper Proposition "failure of the corner search forces Karlsson or
-Tao", in the same implication form as the manuscript. -/
+/-- Paper Proposition "absence of every finite-corner witness forces
+Karlsson or Tao", in the same implication form as the manuscript. -/
 theorem paper_failed_corner_search_forces_karlsson_or_tao
     (hcubic : PublishedCubicRootCriterion)
     {H : Mat6} (hH : IsHadamard H)
@@ -62,16 +57,15 @@ theorem paper_failed_corner_search_forces_karlsson_or_tao
   · exact Or.inl hKarlsson
   · exact Or.inr hTao
 
-/-- Paper Proposition "finite-corner witnesses for the Karlsson locus".  The
-argument is internal except for identifying the explicit residual cores with
-the affine-Fourier seams. -/
+/-- Paper Proposition "finite-corner witnesses for the Karlsson locus".
+Starting from the published raw-or-seam parametrization, the finite-corner
+certificates for both pieces are internal. -/
 theorem paper_karlsson_has_finite_corner
-    (hkarlsson : IntrinsicKarlssonSeamIdentification)
+    (hkarlsson : KarlssonRawOrSeamCoverage)
     {H : Mat6} (hKarlsson : IsKarlssonConcrete H) : HasFiniteCorner H :=
   inFiniteCornerAtlas_hasFiniteCorner
     (hasHadamardTwoByTwo_mem_finiteCornerAtlas
-      (karlssonRawOrSeamCoverage_of_intrinsic_seam hkarlsson)
-      hKarlsson.1 hKarlsson.2)
+      hkarlsson hKarlsson.1 hKarlsson.2)
 
 /-- Paper Proposition "a finite-corner witness for Tao"; no external input. -/
 theorem paper_tao_has_finite_corner
@@ -83,7 +77,7 @@ theorem paper_tao_has_finite_corner
 predicate level. -/
 theorem paper_finite_corner_theorem
     (hcubic : PublishedCubicRootCriterion)
-    (hkarlsson : IntrinsicKarlssonSeamIdentification)
+    (hkarlsson : KarlssonRawOrSeamCoverage)
     {H : Mat6} (hH : IsHadamard H) : HasFiniteCorner H := by
   by_contra hfailed
   rcases paper_failed_corner_search_forces_karlsson_or_tao
@@ -108,7 +102,7 @@ theorem paper_nonexceptional_completed_dilation_recovery
 retained finite-corner output. -/
 theorem paper_finite_corner_completeness
     (hcubic : PublishedCubicRootCriterion)
-    (hkarlsson : IntrinsicKarlssonSeamIdentification)
+    (hkarlsson : KarlssonRawOrSeamCoverage)
     {H : Mat6} (hH : IsHadamard H) :
     InFiniteCornerAtlas H :=
   finiteCorner_mem_finiteCornerAtlas
@@ -122,7 +116,7 @@ theorem paper_finite_corner_soundness {H : Mat6}
 /-- Two-sided class equality, stated only after witness existence. -/
 theorem paper_total_output_corollary
     (hcubic : PublishedCubicRootCriterion)
-    (hkarlsson : IntrinsicKarlssonSeamIdentification)
+    (hkarlsson : KarlssonRawOrSeamCoverage)
     (H : Mat6) :
     IsHadamard H ↔ InFiniteCornerAtlas H := by
   constructor
@@ -134,7 +128,7 @@ already contains only Hadamard matrices, so equality with `Set.univ` is
 precisely the paper's `H_6 = A_6^fc`. -/
 theorem paper_classification_corollary
     (hcubic : PublishedCubicRootCriterion)
-    (hkarlsson : IntrinsicKarlssonSeamIdentification) :
+    (hkarlsson : KarlssonRawOrSeamCoverage) :
     FiniteCornerAtlasClasses = Set.univ := by
   apply Set.eq_univ_of_forall
   intro q
@@ -147,7 +141,7 @@ theorem paper_classification_corollary
 mathematical inputs the classification assumes; the axiom reports below show
 that nothing else is.  Reading both together is the intended audit. -/
 #print PublishedCubicRootCriterion
-#print IntrinsicKarlssonSeamIdentification
+#print KarlssonRawOrSeamCoverage
 
 #print axioms paper_failed_corner_search_forces_karlsson_or_tao
 #print axioms paper_karlsson_has_finite_corner

@@ -78,7 +78,7 @@ theorem taoClasses_subset_finiteCornerAtlasClasses :
 /-- Karlsson containment follows from published global chart coverage; the
 regular chart and affine-Fourier seam certificate are internal. -/
 theorem karlssonClasses_subset_finiteCornerAtlasClasses
-    (hkarlsson : IntrinsicKarlssonSeamIdentification) :
+    (hkarlsson : KarlssonRawOrSeamCoverage) :
     KarlssonClasses ⊆ FiniteCornerAtlasClasses := by
   intro q hq
   induction q using Quotient.inductionOn with
@@ -86,8 +86,7 @@ theorem karlssonClasses_subset_finiteCornerAtlasClasses
       change IsKarlssonConcrete H.1 at hq
       change InFiniteCornerAtlas H.1
       exact hasHadamardTwoByTwo_mem_finiteCornerAtlas
-        (karlssonRawOrSeamCoverage_of_intrinsic_seam
-          hkarlsson) H.2 hq.2
+        hkarlsson H.2 hq.2
 
 /-- The named Tao and Karlsson loci are disjoint on equivalence classes. -/
 theorem taoClasses_disjoint_karlssonClasses :
@@ -125,7 +124,7 @@ theorem standardTaoClass_not_mem_karlssonClasses :
 /-- Quotient-level proper containment.  This formulation avoids any
 notation-dependent definition of strict set inclusion. -/
 theorem karlssonClasses_properly_contained_in_finiteCornerAtlasClasses
-    (hkarlsson : IntrinsicKarlssonSeamIdentification) :
+    (hkarlsson : KarlssonRawOrSeamCoverage) :
     KarlssonClasses ⊆ FiniteCornerAtlasClasses ∧
       ¬ FiniteCornerAtlasClasses ⊆ KarlssonClasses := by
   constructor
