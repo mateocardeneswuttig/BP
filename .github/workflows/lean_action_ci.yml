@@ -31,6 +31,27 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+      # Mathlib plus the generated exact-certificate modules require about
+      # 10 GiB. GitHub's hosted image also contains large Android, .NET, and
+      # Haskell toolchains that this project never uses; removing them leaves
+      # enough space for a clean Lean build.
+      - name: Free disk space for Lean
+        run: |
+          df -h /
+          sudo rm -rf -- \
+            /usr/local/lib/android \
+            /usr/share/dotnet \
+            /opt/ghc \
+            /usr/local/.ghcup
+          df -h /
       - uses: leanprover/lean-action@v1
+        with:
+          # This target transitively imports the complete 107-module audited
+          # proof spine. Naming it avoids building unrelated default targets.
+          build-args: Hadamard6.PaperTheorem
+          # The .lake directory is about 10 GiB; restoring and saving it can
+          # temporarily duplicate that footprint. Mathlib's upstream binary
+          # cache remains enabled by lean-action.
+          use-github-cache: "false"
       - name: Audit paper-facing theorem boundary
         run: python3 audit_public_theorem.py
